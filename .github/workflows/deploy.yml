@@ -36,7 +36,7 @@ jobs:
       - name: Copy built files to root
         run: |
           cp -r build/client/* ./
-          cp public/* ./
+          cp -r public/* ./
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
