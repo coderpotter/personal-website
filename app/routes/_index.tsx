@@ -169,7 +169,7 @@ export default function Index() {
             </div>
             <div className="flex justify-center gap-4">
               <a 
-                href="https://linkedin.com/in/animesh-nighojkar" 
+                href="https://www.linkedin.com/in/anighojkar/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -177,7 +177,7 @@ export default function Index() {
                 LinkedIn
               </a>
               <a 
-                href="https://scholar.google.com" 
+                href="https://scholar.google.com/citations?user=aWECOUMAAAAJ" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -201,7 +201,7 @@ export default function Index() {
                 prompt engineering, and transformer-based language models.
               </p>
               <p className="mb-6">
-                With 2 impactful internships at Dropbox, 5 years of research at University of South Florida, 
+                With 2 impactful internships at Dropbox, 5 years of research at <a href="https://www.usf.edu/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">University of South Florida</a>,
                 and a win in an international legal reasoning competition, I have a proven track record 
                 developing innovative ML solutions.
               </p>
@@ -224,7 +224,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Founding Engineer and CTO</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">Actualization.AI</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                          <a href="https://actualization.ai" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                            Actualization.AI
+                          </a>
+                        </p>
                     <p className="text-gray-600 dark:text-gray-400">Tampa, FL, USA</p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 text-sm md:text-base">September 2024 - Present</span>
@@ -243,7 +247,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Machine Learning Intern</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">Dropbox</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://dropbox.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        Dropbox
+                      </a>
+                    </p>
                     <p className="text-gray-600 dark:text-gray-400">Remote, USA</p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 text-sm md:text-base">May 2023 – August 2023</span>
@@ -260,7 +268,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Machine Learning Intern</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">Dropbox</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://dropbox.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        Dropbox
+                      </a>
+                    </p>
                     <p className="text-gray-600 dark:text-gray-400">Remote, USA</p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 text-sm md:text-base">May 2022 – August 2022</span>
@@ -276,7 +288,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Graduate Research Assistant</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">University of South Florida</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://www.usf.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        University of South Florida
+                      </a>
+                    </p>
                     <p className="text-gray-600 dark:text-gray-400">Tampa, FL, USA</p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 text-sm md:text-base">September 2019 – August 2024</span>
@@ -303,7 +319,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Ph.D. in Computer Science and Engineering</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">University of South Florida, USA</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://www.usf.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        University of South Florida, USA
+                      </a>
+                    </p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">August 2024</span>
                 </div>
@@ -313,7 +333,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Master of Science in Computer Science and Engineering</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">University of South Florida, USA</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://www.usf.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        University of South Florida, USA
+                      </a>
+                    </p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">December 2021</span>
                 </div>
@@ -323,7 +347,11 @@ export default function Index() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Bachelor of Engineering in Computer Science and Engineering</h3>
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold">Rajiv Gandhi Technical University, India</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold">
+                      <a href="https://www.rgpv.ac.in/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        Rajiv Gandhi Technical University, India
+                      </a>
+                    </p>
                   </div>
                   <span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">May 2019</span>
                 </div>
@@ -422,41 +450,48 @@ const publications = [
     title: "Giving AI Personalities Leads to More Human-Like Reasoning",
     venue: "arXiv (2025)",
     authors: "A. Nighojkar, B. Moydinboyev, M. Duong, J. Licato",
-    link: "https://arxiv.org"
+    link: "https://arxiv.org/abs/2502.14155"
   },
   {
     title: "An Inference-Centric Approach to Natural Language Processing and Cognitive Modeling",
     venue: "Ph.D. Dissertation (2025)",
-    authors: "A. Nighojkar"
+    authors: "A. Nighojkar",
+    link: "https://digitalcommons.usf.edu/etd/10546/"
   },
   {
     title: "AMHR COLIEE 2024 Entry: Legal Entailment and Retrieval",
     venue: "New Frontiers in Artificial Intelligence (2024)",
-    authors: "A. Nighojkar, K. Jiang, L. Fields, O. Bilgin, S. Steinle, Y. Sadybekov, Z. Marji, J. Licato"
+    authors: "A. Nighojkar, K. Jiang, L. Fields, O. Bilgin, S. Steinle, Y. Sadybekov, Z. Marji, J. Licato",
+    link: "https://link.springer.com/chapter/10.1007/978-981-97-3076-6_14"
   },
   {
     title: "Exploring Prompting Approaches in Legal Textual Entailment",
     venue: "The Review of Socionetwork Strategies (2024)",
-    authors: "O. Bilgin, L. Fields, A. Laverghetta Jr, Z. Marji, A. Nighojkar, S. Steinle, J. Licato"
+    authors: "O. Bilgin, L. Fields, A. Laverghetta Jr, Z. Marji, A. Nighojkar, S. Steinle, J. Licato",
+    link: "https://link.springer.com/article/10.1007/s12626-023-00154-y"
   },
   {
     title: "No Strong Feelings One Way or Another: Re-operationalizing Neutrality in Natural Language Inference",
     venue: "The 17th Linguistic Annotation Workshop (2023)",
-    authors: "A. Nighojkar, A. Laverghetta Jr, J. Licato"
+    authors: "A. Nighojkar, A. Laverghetta Jr, J. Licato",
+    link: "https://aclanthology.org/2023.law-1.20/"
   },
   {
     title: "Cognitive Modeling of Semantic Fluency Using Transformers",
     venue: "The 31st International Joint Conference on Artificial Intelligence: Cognitive Aspects of Knowledge Representation (2022)",
-    authors: "A. Nighojkar, A. Khlyzova, J. Licato"
+    authors: "A. Nighojkar, A. Khlyzova, J. Licato",
+    link: "https://arxiv.org/abs/2208.09719"
   },
   {
     title: "Improving Paraphrase Detection with the Adversarial Paraphrasing Task",
     venue: "The 59th Annual Meeting of the Association for Computational Linguistics (2021)",
-    authors: "A. Nighojkar, J. Licato"
+    authors: "A. Nighojkar, J. Licato",
+    link: "https://aclanthology.org/2021.acl-long.552/"
   },
   {
     title: "Mutual Implication as a Measure of Textual Equivalence",
     venue: "The International FLAIRS Conference (2021)",
-    authors: "A. Nighojkar, J. Licato"
+    authors: "A. Nighojkar, J. Licato",
+    link: "https://journals.flvc.org/FLAIRS/article/view/128519"
   }
 ];
