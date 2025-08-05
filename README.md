@@ -1,40 +1,41 @@
-# Welcome to Remix!
+# Personal Website - Animesh Nighojkar
 
-- 📖 [Remix docs](https://remix.run/docs)
+My personal website built with Remix, React, and Tailwind CSS.
+
+## Features
+
+- 🌙 Dark/Light theme toggle
+- 📱 Responsive design
+- ⚡ Fast performance
+- 🎨 Modern UI with smooth animations
+- 📸 Professional photo integration
+
+## Tech Stack
+
+- **Framework**: Remix
+- **Styling**: Tailwind CSS
+- **Language**: TypeScript
+- **Deployment**: GitHub Pages
 
 ## Development
 
-Run the dev server:
+```bash
+# Install dependencies
+npm install
 
-```sh
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
 ## Deployment
 
-First, build your app for production:
+This site is automatically deployed to GitHub Pages when changes are pushed to the `main` branch.
 
-```sh
-npm run build
-```
+Visit: [https://coderpotter.github.io/personal-website](https://coderpotter.github.io/personal-website)
 
-Then run the app in production mode:
+## License
 
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+MIT
