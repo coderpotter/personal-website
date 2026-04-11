@@ -57,7 +57,7 @@ export default function Index() {
             </h1>
             <p className={`mt-8 max-w-sm text-[15px] leading-relaxed ${MUTED}`}>
               PhD in NLP. Building production AI at the intersection of research
-              and systems — multi-agent orchestration, RAG, hallucination detection.
+              and systems: multi-agent orchestration, RAG, hallucination detection.
               PI on a $275K NSF SBIR grant.
             </p>
             <div className="mt-10 flex flex-wrap gap-6 font-mono text-xs tracking-wider">
@@ -118,8 +118,8 @@ export default function Index() {
                 Actualization.AI
               </a>
               , building legal AI at the intersection of research and systems.
-              I work across the full stack — multi-agent orchestration, hybrid RAG pipelines,
-              hallucination detection, structured output validation — deployed at scale on AWS and Azure.
+              I work across the full stack: multi-agent orchestration, hybrid RAG pipelines,
+              hallucination detection, structured output validation, deployed at scale on AWS and Azure.
             </p>
             <p>
               PI on a $275K NSF SBIR Phase-I grant. Led an 8-person team to first place at{" "}
@@ -128,9 +128,6 @@ export default function Index() {
               </a>
               , the premier international legal reasoning AI competition. Two ML internships at Dropbox.
               Eight peer-reviewed publications across ACL, IJCAI, FLAIRS, and legal AI venues.
-            </p>
-            <p className={`font-medium`}>
-              I write the code, not just the roadmap.
             </p>
           </div>
         </div>
@@ -323,11 +320,11 @@ const experiences: Experience[] = [
     location: "Tampa, FL",
     period: "Sep 2025 – Present",
     bullets: [
-      "Delivered two independent production LLM systems — a multi-agent contract analysis platform on AWS (LangGraph, SageMaker, OpenSearch) and SquarePact on Azure (Anthropic Foundry, Azure OpenAI, AI Search) — enabling comparative study of orchestration approaches (LangGraph vs. DeepAgents) and retrieval architectures across cloud environments.",
-      "Engineered 80+ domain-specific LLM personas with Pydantic schema validation for structured output extraction; architected SquarePact's DeepAgents framework (Claude Haiku/Sonnet, GPT-4) with specialized subagent roles — generating empirical findings on agent specialization, output reliability, and failure mode distribution at scale.",
-      "Built and benchmarked two retrieval pipelines: SageMaker embeddings → OpenSearch with 256-concurrent asyncio ops (90% latency cut, 70% cost cut); and SquarePact's hybrid RAG on Azure AI Search — dense (text-embedding-3-large, 3072-dim), BM25, and hybrid modes with TTL caching.",
-      "Invented a novel self-healing structured output pipeline (Regex → Python AST → Generative Repair) that guarantees valid JSON from any LLM response — eliminated production parse failures with no latency penalty for well-formed outputs; a general decoding fallback applicable beyond this system.",
-      "Designed a two-agent document editing pipeline: a reasoning agent proposes edits in Markdown while a constraint-enforcing verifier subagent converts to OOXML with formal preservation guarantees on paragraph structure, hyperlinks, and embedded objects — synced to OneDrive via Microsoft Graph.",
+      "Delivered two independent production LLM systems: a multi-agent contract analysis platform on AWS (LangGraph, SageMaker, OpenSearch) and SquarePact on Azure (Anthropic Foundry, Azure OpenAI, AI Search). Enabled comparative study of orchestration approaches (LangGraph vs. DeepAgents) and retrieval architectures across cloud environments.",
+      "Engineered 80+ domain-specific LLM personas with Pydantic schema validation for structured output extraction; architected SquarePact's DeepAgents framework (Claude Haiku/Sonnet, GPT-4) with specialized subagent roles, generating empirical findings on agent specialization, output reliability, and failure mode distribution at scale.",
+      "Built and benchmarked two retrieval pipelines: SageMaker embeddings to OpenSearch with 256-concurrent asyncio ops (90% latency cut, 70% cost cut); and SquarePact's hybrid RAG on Azure AI Search with dense (text-embedding-3-large, 3072-dim), BM25, and hybrid modes with TTL caching.",
+      "Invented a novel self-healing structured output pipeline (Regex to Python AST to Generative Repair) that guarantees valid JSON from any LLM response, eliminating production parse failures with no latency penalty for well-formed outputs. A general decoding fallback applicable beyond this system.",
+      "Designed a two-agent document editing pipeline: a reasoning agent proposes edits in Markdown while a constraint-enforcing verifier subagent converts to OOXML with formal preservation guarantees on paragraph structure, hyperlinks, and embedded objects, synced to OneDrive via Microsoft Graph.",
     ],
   },
   {
@@ -337,10 +334,10 @@ const experiences: Experience[] = [
     location: "Tampa, FL",
     period: "Sep 2024 – Sep 2025",
     bullets: [
-      "PI on a $275K NSF SBIR Phase-I grant for legal AI; designed and shipped hallucination detection infrastructure — reproducible CI/CD for prompt templating, generation tracing, and automated LLM safety benchmarking with standardized adversarial robustness metrics.",
-      "Built production Playwright scrapers for large-scale legal corpus acquisition — proxy rotation, anti-bot evasion, CAPTCHA solving, rate-limit backoff, 99% uptime — providing the training and evaluation data pipeline for NLP research on hallucination in high-stakes legal reasoning.",
-      "Built and open-sourced tireKicker (GPL-3.0) — a Python CLI for systematic adversarial probing of conversational AI — operationalizing the NSF-funded safety evaluation methodology into a reproducible, community-accessible benchmarking tool.",
-      "Built a high-throughput RAG research assistant platform — vector search over scientific literature, containerized Python + TypeScript microservices on Kubernetes — enabling scalable, reproducible NLP research workflows for literature retrieval, hypothesis exploration, and experiment tracking.",
+      "PI on a $275K NSF SBIR Phase-I grant for legal AI; designed and shipped hallucination detection infrastructure: reproducible CI/CD for prompt templating, generation tracing, and automated LLM safety benchmarking with standardized adversarial robustness metrics.",
+      "Built production Playwright scrapers for large-scale legal corpus acquisition (proxy rotation, anti-bot evasion, CAPTCHA solving, rate-limit backoff, 99% uptime), providing the training and evaluation data pipeline for NLP research on hallucination in high-stakes legal reasoning.",
+      "Built and open-sourced tireKicker (GPL-3.0), a Python CLI for systematic adversarial probing of conversational AI, operationalizing the NSF-funded safety evaluation methodology into a reproducible, community-accessible benchmarking tool.",
+      "Built a high-throughput RAG research assistant platform with vector search over scientific literature and containerized Python + TypeScript microservices on Kubernetes, enabling scalable, reproducible NLP research workflows for literature retrieval, hypothesis exploration, and experiment tracking.",
     ],
   },
   {
@@ -350,7 +347,7 @@ const experiences: Experience[] = [
     location: "Remote",
     period: "May – Aug 2023",
     bullets: [
-      "Implemented an end-to-end video object removal pipeline — interactive segmentation on a paused frame, temporal tracking, seamless inpainting — validating the practical viability of chaining CV methods in a real-time production pipeline; integrated with front-end and placed 3rd at Dropbox Hack Week 2023.",
+      "Implemented an end-to-end video object removal pipeline (interactive segmentation on a paused frame, temporal tracking, seamless inpainting), validating the practical viability of chaining CV methods in a real-time production pipeline; integrated with front-end and placed 3rd at Dropbox Hack Week 2023.",
     ],
   },
   {
@@ -360,7 +357,7 @@ const experiences: Experience[] = [
     location: "Remote",
     period: "May – Aug 2022",
     bullets: [
-      "Trained and deployed a long-document summarization service with no context ceiling — designed hierarchical chunking and aggregation strategies to extend transformer summarization beyond fixed context windows — and prototyped the full-stack UI for VP demonstration.",
+      "Trained and deployed a long-document summarization service with no context ceiling; designed hierarchical chunking and aggregation strategies to extend transformer summarization beyond fixed context windows, and prototyped the full-stack UI for VP demonstration.",
     ],
   },
   {
@@ -370,8 +367,8 @@ const experiences: Experience[] = [
     location: "Tampa, FL",
     period: "Sep 2019 – Aug 2024",
     bullets: [
-      "Led an 8-person team to 1st place at COLIEE-2024 — the premier international legal reasoning AI competition; engineered prompting strategies and retrieval pipelines for legal entailment and statute retrieval, contributing novel architectures published in New Frontiers in Artificial Intelligence.",
-      "Conducted foundational NLP research across three lines: pre-trained BERT from scratch to investigate transformer learning dynamics; modeled human semantic fluency and memory retrieval with transformers (IJCAI 2022); engineered GPT-4 pipelines for psychometric dataset construction and AI persona studies (arXiv 2025) — 8 publications across ACL, IJCAI, FLAIRS, and legal AI venues.",
+      "Led an 8-person team to 1st place at COLIEE-2024 (the premier international legal reasoning AI competition); engineered prompting strategies and retrieval pipelines for legal entailment and statute retrieval, contributing novel architectures published in New Frontiers in Artificial Intelligence.",
+      "Conducted foundational NLP research across three lines: pre-trained BERT from scratch to investigate transformer learning dynamics; modeled human semantic fluency and memory retrieval with transformers (IJCAI 2022); engineered GPT-4 pipelines for psychometric dataset construction and AI persona studies (arXiv 2025). 8 publications across ACL, IJCAI, FLAIRS, and legal AI venues.",
     ],
   },
 ];
