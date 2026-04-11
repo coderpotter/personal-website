@@ -1,0 +1,144 @@
+{
+  "candidate": "Animesh Nighojkar",
+  "professional_summary": {
+    "managerial": "Engineering leader with a PhD in CS and a track record of shipping AI systems at the intersection of research and production. Secured $275K in NSF funding as PI, led an 8-person team to first place in an international legal reasoning competition, and drove a cross-functional team to deliver an enterprise AI platform in 10 days — landing pilots with Tampa International Airport. Deep expertise in LLMs, RAG, and AI safety, with the technical depth to set direction and the discipline to hold teams accountable to it.",
+    "startup": "Founding engineer and PhD researcher who ships. Built production legal AI from zero — multi-agent architecture, semantic search, Azure and AWS cloud infra — and landed enterprise pilots with Tampa International Airport in 10 days. Won a $275K NSF grant, placed first at COLIEE-2024, and open-sourced AI safety tooling. Writes the code, not just the roadmap.",
+    "ai_ml_engineer": "PhD researcher and engineer specializing in LLMs, multi-agent systems, RAG pipelines, and AI safety. Built and deployed production legal AI on both AWS and Azure — semantic search, hallucination detection, structured output validation, hybrid retrieval. Published across ACL, IJCAI, and legal AI venues. Hands-on from BERT pretraining from scratch to 256-concurrent async inference in production.",
+    "research": "PhD in CS with a publication record spanning NLP inference, legal reasoning, cognitive modeling, and AI safety. PI on a $275K NSF SBIR grant; first place at COLIEE-2024. Research spans theoretical foundations — transformer learning dynamics, hallucination detection, psychometric dataset construction — and applied systems at production scale. Eight peer-reviewed publications across ACL, IJCAI, FLAIRS, and legal AI venues."
+  },
+  "roles": [
+    {
+      "title": "VP, Engineering",
+      "company": "Actualization.AI",
+      "dates": "Sep 2025 – Present",
+      "bullets": [
+        {
+          "theme": "platform_delivery_and_client_impact",
+          "managerial": "Led cross-functional team to architect and ship a production AI legal platform in 10 days, securing enterprise pilots with Tampa International Airport; owned technical strategy across two product lines (SquarePact and the core contract analysis system) spanning AWS and Azure infrastructure.",
+          "startup": "Took Actualization.AI's legal AI platform from whiteboard to enterprise pilot with Tampa International Airport in 10 days — two production systems, two cloud stacks (AWS and Azure), one team moving fast.",
+          "ai_ml_engineer": "Delivered two production LLM systems — a multi-agent contract analysis platform on AWS (LangGraph, SageMaker, OpenSearch) and SquarePact on Azure (Anthropic Foundry, Azure OpenAI, AI Search) — each with distinct retrieval architectures and agent orchestration patterns.",
+          "research": "Brought two independent multi-agent legal reasoning systems to production, enabling comparative empirical study of LLM orchestration approaches (LangGraph vs. custom DeepAgents), retrieval architectures (OpenSearch vs. Azure AI Search), and cloud deployment patterns for legal NLP."
+        },
+        {
+          "theme": "multi_agent_architecture",
+          "managerial": "Defined agent architecture standards across both product lines: 80+ domain-specific LLM personas with Pydantic-validated structured output for contract review, and a four-role agent system (conversation, edit verification, clause suggestion, questionnaire response) in SquarePact.",
+          "startup": "Built two distinct agent systems: 80+ specialized LLM personas with Pydantic-enforced structured output for multi-domain contract review, and SquarePact's DeepAgents framework with dedicated roles for conversation, document editing, clause rewriting, and questionnaire response.",
+          "ai_ml_engineer": "Engineered 80+ domain-specific LLM personas with Pydantic schema validation for structured output extraction, and architected SquarePact's subagent orchestration (DeepAgents) with specialized roles using Claude Haiku/Sonnet and GPT-5.4 across distinct reasoning tasks.",
+          "research": "Designed and evaluated two multi-agent architectures at scale: domain-specific persona conditioning with 80+ LLM configurations and structured output constraints, and a decomposed subagent system with specialized reasoning roles — contributing empirical findings on agent specialization, output reliability, and failure mode distribution."
+        },
+        {
+          "theme": "retrieval_and_search",
+          "managerial": "Drove 90% latency reduction and 70% cost savings through retrieval pipeline optimization — SageMaker embeddings + OpenSearch on AWS, and hybrid dense/sparse retrieval (text-embedding-3-large, 3072-dim, BM25) over a hierarchical clause index on Azure AI Search for SquarePact.",
+          "startup": "Built two semantic search stacks: SageMaker → OpenSearch with embedding cache and 256-concurrent asyncio ops (90% latency cut, 70% cost cut), and SquarePact's hybrid RAG over a hierarchical clause library — dense, BM25, and hybrid modes with TTL-cached embeddings.",
+          "ai_ml_engineer": "Implemented and optimized two production retrieval pipelines: SageMaker transformer embeddings → OpenSearch vector index with asyncio (256 concurrent ops, 90% latency reduction); and SquarePact's hybrid RAG over Azure AI Search — dense (text-embedding-3-large, 3072-dim), sparse (BM25), and hybrid modes with TTL-cached embeddings and parse caching.",
+          "research": "Designed and benchmarked two dense retrieval pipelines for legal clause search — AWS (SageMaker + OpenSearch) and Azure (text-embedding-3-large + Azure AI Search with dense/BM25/hybrid modes) — yielding comparative empirical data on latency, cost, and retrieval quality across architectures."
+        },
+        {
+          "theme": "self_healing_extraction",
+          "managerial": "Eliminated downstream parse failures in production by inventing a three-stage self-healing data extraction pipeline (Regex → Python AST → Generative Repair) that guarantees valid structured output from any LLM response.",
+          "startup": "Solved the LLM reliability problem in production contracts with a 3-stage self-healing pipeline: Regex catches clean cases, Python AST handles partial structure, Generative Repair recovers the rest — zero parse failures at scale.",
+          "ai_ml_engineer": "Invented a self-healing structured output pipeline (Regex → Python AST → Generative Repair) that guarantees valid JSON from any LLM response regardless of formatting errors — eliminated production parse failures with no increase in latency for well-formed outputs.",
+          "research": "Developed a novel three-stage structured output recovery method (Regex → Python AST → Generative Repair) as a practical solution to LLM constrained generation failures — contributes a robust decoding fallback strategy applicable to any system requiring reliable structured output from generative models."
+        },
+        {
+          "theme": "squarepact_document_editing",
+          "managerial": "Established document processing standards for SquarePact including a bidirectional OOXML ↔ Markdown conversion pipeline and a verifier subagent, enabling AI-driven edits on live Word documents with full fidelity across paragraph structure, hyperlinks, and embedded objects.",
+          "startup": "Shipped a custom OOXML ↔ Markdown bidirectional converter and a dedicated verifier subagent so SquarePact could read, rewrite, and write back live Word documents without corrupting structure — preserving paragraph/run properties, hyperlinks, figures, and equations through every round-trip.",
+          "ai_ml_engineer": "Built SquarePact's document edit pipeline: main agent proposes edits in Markdown, a verifier subagent converts to OOXML with formal preservation constraints on paragraph/run properties, hyperlink relationships, and atomic placeholders (figures, equations); synced to OneDrive via Microsoft Graph.",
+          "research": "Designed a novel two-agent document editing architecture: a reasoning agent operating in Markdown and a constraint-enforcing verifier subagent handling OOXML conversion — a practical contribution to controllable document generation with formal preservation guarantees on structured document elements."
+        },
+        {
+          "theme": "squarepact_middleware_and_infra",
+          "managerial": "Designed and owned SquarePact's production infrastructure — stateless Azure Container Apps deployment with Cosmos DB, Blob Storage, AI Search, Key Vault, and Application Insights — alongside a middleware stack enforcing real-time AI spend limits via Azure Cost Management API, agent cancellation, and multi-user safety.",
+          "startup": "Ran SquarePact's full infra solo: stateless Azure Container Apps stack, a virtual filesystem routing agent I/O across Blob, AI Search, OneDrive, and in-memory backends, and a middleware layer handling budget enforcement (Azure Cost Management API), cancellation, context compaction, retry, and per-request tracing.",
+          "ai_ml_engineer": "Built SquarePact's multi-layer LLM middleware pipeline: model retry (429/5xx), SSE-based cancellation injection, context compaction for long-horizon coherence, tool-call rate limiting, and real-time budget enforcement via Azure Cost Management API; backed by a virtual filesystem abstraction routing I/O across Azure Blob, AI Search, OneDrive, and in-memory with TTL caching.",
+          "research": "Designed and evaluated a context compaction middleware for long-horizon agent conversations — reducing token consumption without degrading reasoning coherence — alongside a virtual filesystem abstraction enabling seamless multi-store agent reasoning; contributes architectural patterns and empirical findings on context management tradeoffs in production agentic systems."
+        }
+      ]
+    },
+    {
+      "title": "Founding Engineer",
+      "company": "Actualization.AI",
+      "dates": "Sep 2024 – Sep 2025",
+      "bullets": [
+        {
+          "theme": "nsf_grant_and_research_infrastructure",
+          "managerial": "Served as PI on a $275K NSF SBIR Phase-I grant for next-generation legal AI; established reproducible CI/CD pipelines, prompt engineering standards, and an automated benchmarking suite for LLM safety and robustness — creating the research infrastructure that accelerated the team's evaluation and mitigation cycles.",
+          "startup": "Won a $275K NSF SBIR Phase-I grant as PI while simultaneously building the full research backend: hallucination detection orchestration, prompt templating, generation tracing, evaluation pipelines, and an adversarial benchmarking suite — all from scratch.",
+          "ai_ml_engineer": "PI on a $275K NSF SBIR Phase-I grant; architected the hallucination detection and evaluation infrastructure — reproducible CI/CD for prompt templating, generation tracing, and automated LLM safety benchmarking with standardized adversarial robustness metrics — creating a tight hypothesis-to-mitigation feedback loop.",
+          "research": "Principal Investigator on a $275K NSF SBIR Phase-I grant for legal AI; designed reproducible research infrastructure for large-scale hallucination detection (prompt templating, generation tracing, automated evaluation) and a standardized benchmarking framework for LLM adversarial robustness — findings directly informed mitigation strategies and grant deliverables."
+        },
+        {
+          "theme": "legal_corpus_and_data_pipeline",
+          "managerial": "Directed development of production web scrapers for legal document extraction across court systems — proxy rotation, CAPTCHA solving, anti-bot evasion, backoff/retry — sustaining 99% uptime on hostile endpoints to support the research data pipeline.",
+          "startup": "Built Playwright scrapers across court systems from scratch: proxy rotation, CAPTCHA solving, anti-bot evasion, backoff/retry policies — 99% uptime on endpoints actively trying to block you.",
+          "ai_ml_engineer": "Built production Playwright scrapers for large-scale legal corpus acquisition: proxy rotation, anti-bot evasion, CAPTCHA solving, session management, and rate-limit backoff — sustaining 99% uptime across adversarial court system endpoints.",
+          "research": "Constructed a large-scale legal corpus acquisition pipeline via Playwright-based scraping across court systems — enabling the training and evaluation data necessary for NLP research on hallucination in high-stakes legal reasoning."
+        },
+        {
+          "theme": "tirekicker_oss",
+          "managerial": "Created and open-sourced tireKicker (GPL-3.0), a Python CLI for probing deployed AI agent vulnerabilities — extending Actualization.AI's influence in the AI safety community while operationalizing adversarial evaluation methodology built for the NSF grant.",
+          "startup": "Built and shipped tireKicker (GPL-3.0) — a Python CLI that systematically probes deployed AI agents for failure modes. Open-sourced it, put it in the community's hands.",
+          "ai_ml_engineer": "Developed tireKicker (GPL-3.0), a Python CLI for automated adversarial probing of conversational AI systems — operationalizing failure mode detection workflows built for LLM safety research into a reusable open-source tool.",
+          "research": "Developed and open-sourced tireKicker (GPL-3.0), a research tool for systematic adversarial probing of conversational AI — operationalizing the evaluation methodology from NSF-funded safety research as a reusable community resource, contributing to reproducible AI safety benchmarking."
+        },
+        {
+          "theme": "rag_research_platform",
+          "managerial": "Oversaw architecture and delivery of a Research Assistant platform on Python, TypeScript, Docker, and Kubernetes — providing the team with a scalable, reproducible RAG-based infrastructure for literature retrieval and hypothesis exploration.",
+          "startup": "Built a high-throughput RAG research platform — vector search, containerized Python + TypeScript stack, Kubernetes — reproducible from day one and built to scale.",
+          "ai_ml_engineer": "Built a high-throughput RAG research assistant platform: vector search over scientific literature, containerized Python + TypeScript microservices on Kubernetes, reproducible pipelines for scalable NLP research workflows.",
+          "research": "Architected a RAG-based research assistant platform with vector search and containerized microservices (Docker/Kubernetes), enabling scalable and reproducible NLP research workflows for literature retrieval, hypothesis exploration, and experiment tracking."
+        }
+      ]
+    },
+    {
+      "title": "Machine Learning Intern",
+      "company": "Dropbox",
+      "dates": "May 2023 – Aug 2023",
+      "bullets": [
+        {
+          "theme": "video_object_removal",
+          "managerial": "Delivered an end-to-end video object removal feature — user selects any object in a paused frame, system tracks and removes it through the remainder of the video — coordinating with front-end teams for full production integration; showcased at Dropbox Hack Week 2023, placed 3rd company-wide.",
+          "startup": "Built and shipped a complete video object removal feature: tap any object in any frame, it's tracked and erased for the rest of the video. Won 3rd at Dropbox Hack Week 2023.",
+          "ai_ml_engineer": "Implemented an end-to-end video object removal pipeline — interactive segmentation on paused frame, temporal tracking across subsequent frames, seamless inpainting — integrated with front-end for production delivery; placed 3rd at Dropbox Hack Week 2023.",
+          "research": "Implemented a production video object removal system combining interactive segmentation, temporal tracking, and inpainting — validating the practical viability of chaining these computer vision methods in a real-time user-facing pipeline; placed 3rd at Dropbox Hack Week 2023."
+        }
+      ]
+    },
+    {
+      "title": "Machine Learning Intern",
+      "company": "Dropbox",
+      "dates": "May 2022 – Aug 2022",
+      "bullets": [
+        {
+          "theme": "summarization_service",
+          "managerial": "Trained and deployed a document and transcript summarization service handling theoretically unbounded input length; drove feature end-to-end from model training through VP-level demo, including prototyping the product UI.",
+          "startup": "Trained summarization models and shipped a service with no hard input-length ceiling — handles infinite documents and transcripts. Built the VP demo UI too.",
+          "ai_ml_engineer": "Trained and deployed a long-document summarization service with no context ceiling — designed a hierarchical chunking and aggregation strategy to handle arbitrarily long text; prototyped the full-stack product UI for VP demonstration.",
+          "research": "Trained and deployed a summarization system for unbounded-length documents and transcripts, investigating hierarchical chunking and aggregation strategies for extending transformer summarization beyond fixed context windows; translated findings into a product demo for VP evaluation."
+        }
+      ]
+    },
+    {
+      "title": "Graduate Research Assistant",
+      "company": "University of South Florida",
+      "dates": "Sep 2019 – Aug 2024",
+      "bullets": [
+        {
+          "theme": "coliee_2024",
+          "managerial": "Led an 8-person research team to first place in COLIEE-2024 — the premier international legal reasoning AI competition — coordinating research direction, task division, and submission strategy across legal entailment and statute retrieval tracks.",
+          "startup": "Led 8 researchers to 1st place at COLIEE-2024, the top international competition for legal reasoning AI — hands-on with prompting strategy, retrieval design, and ablations all the way to the final submission.",
+          "ai_ml_engineer": "Led an 8-person team to 1st place in COLIEE-2024; engineered the prompting strategies and retrieval pipelines for legal entailment and statute retrieval tasks — published in New Frontiers in Artificial Intelligence.",
+          "research": "Led an 8-member team to first place in COLIEE-2024, the premier legal reasoning AI competition; contributed novel prompting strategies and retrieval architectures for legal entailment and statute retrieval — published in New Frontiers in Artificial Intelligence."
+        },
+        {
+          "theme": "transformer_research",
+          "managerial": "Directed a multi-year foundational research program covering transformer pretraining dynamics, cognitive modeling of human memory retrieval, and GPT-4-based psychometric dataset construction — producing 8 publications across ACL, IJCAI, and FLAIRS.",
+          "startup": "Pre-trained BERT from scratch, modeled human memory with transformers, and used GPT-4 to generate psychometrically valid synthetic datasets — 8 publications across ACL, IJCAI, and FLAIRS to show for it.",
+          "ai_ml_engineer": "Pre-trained BERT from scratch to investigate transformer learning dynamics; modeled human semantic fluency tasks with transformers (IJCAI); engineered GPT-4 prompt pipelines for psychometric dataset construction; findings on AI personas and human-like reasoning published on arXiv (2025).",
+          "research": "Conducted foundational NLP research across three lines: (1) transformer pretraining dynamics via from-scratch BERT training; (2) cognitive modeling of semantic fluency and memory retrieval with transformers (IJCAI); (3) GPT-4-driven psychometric dataset construction and the effect of AI personas on human-like reasoning (arXiv 2025) — contributing 8 peer-reviewed publications across ACL, IJCAI, FLAIRS, and legal AI venues."
+        }
+      ]
+    }
+  ]
+}

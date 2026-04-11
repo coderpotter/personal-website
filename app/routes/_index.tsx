@@ -4,8 +4,8 @@ import { useTheme } from "~/root";
 export const meta: MetaFunction = () => {
   return [
     { title: "Animesh Nighojkar" },
-    { name: "description", content: "AI Research Engineer & CTO. Ph.D. in Natural Language Processing. Founding Engineer at Actualization.AI." },
-    { name: "keywords", content: "AI, Machine Learning, NLP, CTO, Research, Python, Transformers, GPT, BERT" },
+    { name: "description", content: "VP Engineering & PhD researcher at the intersection of NLP systems and production AI. PI on a $275K NSF SBIR grant. First place at COLIEE-2024." },
+    { name: "keywords", content: "AI, Machine Learning, NLP, LLM, RAG, multi-agent, hallucination detection, legal AI, transformer" },
   ];
 };
 
@@ -50,14 +50,15 @@ export default function Index() {
           {/* Left: text */}
           <div className="flex-1">
             <p className={`font-mono text-xs tracking-[0.25em] uppercase ${ACCENT} mb-8`}>
-              AI Research Engineer & CTO
+              VP Engineering · AI Research
             </p>
             <h1 className="font-serif text-[clamp(3.5rem,11vw,8.5rem)] leading-[0.92] tracking-tight text-[#111111] dark:text-[#EDE9E1]">
               Animesh<br />Nighojkar
             </h1>
             <p className={`mt-8 max-w-sm text-[15px] leading-relaxed ${MUTED}`}>
-              Ph.D. in Natural Language Processing. Founding Engineer (CTO) at Actualization.AI.
-              Principal Investigator on a $275K NSF SBIR grant.
+              PhD in NLP. Building production AI at the intersection of research
+              and systems — multi-agent orchestration, RAG, hallucination detection.
+              PI on a $275K NSF SBIR grant.
             </p>
             <div className="mt-10 flex flex-wrap gap-6 font-mono text-xs tracking-wider">
               <a
@@ -112,24 +113,24 @@ export default function Index() {
           <div />
           <div className="space-y-5 text-[15px] leading-relaxed text-[#111111]/80 dark:text-[#EDE9E1]/80">
             <p>
-              Founding Engineer (CTO) at{" "}
+              PhD in NLP and production ML engineer at{" "}
               <a href="https://actualization.ai" target="_blank" rel="noopener noreferrer" className={`${ACCENT} hover:opacity-70 transition-opacity`}>
                 Actualization.AI
               </a>
-              {" "}with a Ph.D. in Natural Language Processing from the{" "}
-              <a href="https://www.usf.edu/" target="_blank" rel="noopener noreferrer" className={`${ACCENT} hover:opacity-70 transition-opacity`}>
-                University of South Florida
-              </a>.
-              I seek roles where I can apply expertise in advanced language modeling,
-              prompt engineering, and transformer-based architectures.
+              , building legal AI at the intersection of research and systems.
+              I work across the full stack — multi-agent orchestration, hybrid RAG pipelines,
+              hallucination detection, structured output validation — deployed at scale on AWS and Azure.
             </p>
             <p>
-              Two impactful internships at Dropbox, five years of research at USF, and a win
-              in an international legal reasoning competition — I have a track record of delivering
-              innovative ML solutions that work in production.
+              PI on a $275K NSF SBIR Phase-I grant. Led an 8-person team to first place at{" "}
+              <a href="https://sites.ualberta.ca/~rabelo/COLIEE2024/" target="_blank" rel="noopener noreferrer" className={`${ACCENT} hover:opacity-70 transition-opacity`}>
+                COLIEE-2024
+              </a>
+              , the premier international legal reasoning AI competition. Two ML internships at Dropbox.
+              Eight peer-reviewed publications across ACL, IJCAI, FLAIRS, and legal AI venues.
             </p>
-            <p className={`font-medium ${ACCENT}`}>
-              Principal Investigator on a $275K NSF SBIR Phase-I grant.
+            <p className={`font-medium`}>
+              I write the code, not just the roadmap.
             </p>
           </div>
         </div>
@@ -163,9 +164,9 @@ export default function Index() {
       <section id="skills" className={`py-20 border-t ${RULE}`}>
         <div className="max-w-5xl mx-auto px-6">
           <SectionLabel n="04" label="Skills" />
-          <div className="mt-10 space-y-6">
+          <div className="mt-10 space-y-0">
             {skillGroups.map(({ category, items }) => (
-              <div key={category} className="grid md:grid-cols-[200px_1fr] gap-2 md:gap-8 py-4 border-b border-[#111111]/5 dark:border-[#EDE9E1]/5">
+              <div key={category} className={`grid md:grid-cols-[200px_1fr] gap-2 md:gap-8 py-5 border-b border-[#111111]/5 dark:border-[#EDE9E1]/5`}>
                 <span className={`font-mono text-xs tracking-widest uppercase ${MUTED} pt-0.5`}>
                   {category}
                 </span>
@@ -240,10 +241,10 @@ function ExperienceItem({ title, company, companyUrl, location, period, bullets 
           </a>
           <span className={`font-mono text-xs ml-3 ${MUTED}`}>{location}</span>
         </p>
-        <ul className={`space-y-2 text-[14px] leading-relaxed text-[#111111]/70 dark:text-[#EDE9E1]/70`}>
+        <ul className="space-y-2.5 text-[14px] leading-relaxed text-[#111111]/70 dark:text-[#EDE9E1]/70">
           {bullets.map((b, i) => (
             <li key={i} className="flex gap-3">
-              <span className={`mt-[6px] w-1 h-1 rounded-full flex-shrink-0 bg-[#C93D0E] dark:bg-[#FF6B35] opacity-60`} />
+              <span className="mt-[7px] w-1 h-1 rounded-full flex-shrink-0 bg-[#C93D0E] dark:bg-[#FF6B35] opacity-60" />
               <span>{b}</span>
             </li>
           ))}
@@ -316,17 +317,30 @@ function PublicationItem({ n, title, venue, authors, link }: Publication & { n: 
 
 const experiences: Experience[] = [
   {
-    title: "Founding Engineer and CTO",
+    title: "VP, Engineering",
     company: "Actualization.AI",
     companyUrl: "https://actualization.ai",
     location: "Tampa, FL",
-    period: "Sep 2024 – Present",
+    period: "Sep 2025 – Present",
     bullets: [
-      "Principal Investigator (PI) on a $275K NSF SBIR Phase-I grant.",
-      "Made the product 2× faster and 10× cheaper without compromising performance.",
-      "Working with Tampa International Airport (TPA) and other companies on separate pilot programs.",
-      "Creating LLM jailbreaks and prompt engineering techniques to test the robustness of AI systems.",
-      "Led a team of four engineers to deliver an MVP in 10 days.",
+      "Delivered two independent production LLM systems — a multi-agent contract analysis platform on AWS (LangGraph, SageMaker, OpenSearch) and SquarePact on Azure (Anthropic Foundry, Azure OpenAI, AI Search) — enabling comparative study of orchestration approaches (LangGraph vs. DeepAgents) and retrieval architectures across cloud environments.",
+      "Engineered 80+ domain-specific LLM personas with Pydantic schema validation for structured output extraction; architected SquarePact's DeepAgents framework (Claude Haiku/Sonnet, GPT-4) with specialized subagent roles — generating empirical findings on agent specialization, output reliability, and failure mode distribution at scale.",
+      "Built and benchmarked two retrieval pipelines: SageMaker embeddings → OpenSearch with 256-concurrent asyncio ops (90% latency cut, 70% cost cut); and SquarePact's hybrid RAG on Azure AI Search — dense (text-embedding-3-large, 3072-dim), BM25, and hybrid modes with TTL caching.",
+      "Invented a novel self-healing structured output pipeline (Regex → Python AST → Generative Repair) that guarantees valid JSON from any LLM response — eliminated production parse failures with no latency penalty for well-formed outputs; a general decoding fallback applicable beyond this system.",
+      "Designed a two-agent document editing pipeline: a reasoning agent proposes edits in Markdown while a constraint-enforcing verifier subagent converts to OOXML with formal preservation guarantees on paragraph structure, hyperlinks, and embedded objects — synced to OneDrive via Microsoft Graph.",
+    ],
+  },
+  {
+    title: "Founding Engineer",
+    company: "Actualization.AI",
+    companyUrl: "https://actualization.ai",
+    location: "Tampa, FL",
+    period: "Sep 2024 – Sep 2025",
+    bullets: [
+      "PI on a $275K NSF SBIR Phase-I grant for legal AI; designed and shipped hallucination detection infrastructure — reproducible CI/CD for prompt templating, generation tracing, and automated LLM safety benchmarking with standardized adversarial robustness metrics.",
+      "Built production Playwright scrapers for large-scale legal corpus acquisition — proxy rotation, anti-bot evasion, CAPTCHA solving, rate-limit backoff, 99% uptime — providing the training and evaluation data pipeline for NLP research on hallucination in high-stakes legal reasoning.",
+      "Built and open-sourced tireKicker (GPL-3.0) — a Python CLI for systematic adversarial probing of conversational AI — operationalizing the NSF-funded safety evaluation methodology into a reproducible, community-accessible benchmarking tool.",
+      "Built a high-throughput RAG research assistant platform — vector search over scientific literature, containerized Python + TypeScript microservices on Kubernetes — enabling scalable, reproducible NLP research workflows for literature retrieval, hypothesis exploration, and experiment tracking.",
     ],
   },
   {
@@ -336,9 +350,7 @@ const experiences: Experience[] = [
     location: "Remote",
     period: "May – Aug 2023",
     bullets: [
-      "Implemented end-to-end object removal from videos — users pause, click an object, and it's tracked and removed through the rest of the video.",
-      "Cross-collaborated with front-end teams to ship the feature.",
-      "Feature showcased at Dropbox Hack Week 2023. Won third place.",
+      "Implemented an end-to-end video object removal pipeline — interactive segmentation on a paused frame, temporal tracking, seamless inpainting — validating the practical viability of chaining CV methods in a real-time production pipeline; integrated with front-end and placed 3rd at Dropbox Hack Week 2023.",
     ],
   },
   {
@@ -348,8 +360,7 @@ const experiences: Experience[] = [
     location: "Remote",
     period: "May – Aug 2022",
     bullets: [
-      "Trained summarization models and deployed a document and transcript summarization service capable of handling theoretically infinite text length.",
-      "Prototyped the UI for demonstration to the VP.",
+      "Trained and deployed a long-document summarization service with no context ceiling — designed hierarchical chunking and aggregation strategies to extend transformer summarization beyond fixed context windows — and prototyped the full-stack UI for VP demonstration.",
     ],
   },
   {
@@ -359,10 +370,8 @@ const experiences: Experience[] = [
     location: "Tampa, FL",
     period: "Sep 2019 – Aug 2024",
     bullets: [
-      "Prompt engineering for GPT-4 to create datasets with specific psychological and psychometric properties.",
-      "Modeled semantic fluency tasks using transformers to understand human cognition and memory retrieval.",
-      "Pre-trained BERT from scratch to explore how LLMs learn and understand language.",
-      "Led a team of 8 researchers to win the COLIEE-2024 international legal reasoning competition.",
+      "Led an 8-person team to 1st place at COLIEE-2024 — the premier international legal reasoning AI competition; engineered prompting strategies and retrieval pipelines for legal entailment and statute retrieval, contributing novel architectures published in New Frontiers in Artificial Intelligence.",
+      "Conducted foundational NLP research across three lines: pre-trained BERT from scratch to investigate transformer learning dynamics; modeled human semantic fluency and memory retrieval with transformers (IJCAI 2022); engineered GPT-4 pipelines for psychometric dataset construction and AI persona studies (arXiv 2025) — 8 publications across ACL, IJCAI, FLAIRS, and legal AI venues.",
     ],
   },
 ];
@@ -391,15 +400,19 @@ const education: Education[] = [
 const skillGroups = [
   {
     category: "Languages",
-    items: ["Python", "C++", "Java", "Rust", "JavaScript", "SQL", "Scala", "R", "Bash", "LaTeX"],
+    items: ["Python", "C++", "Java", "Rust", "JavaScript", "TypeScript", "SQL", "Scala", "Bash", "LaTeX"],
   },
   {
-    category: "Frameworks",
-    items: ["PyTorch", "TensorFlow", "Keras", "Pandas", "NumPy", "Scikit-learn", "OpenCV", "Django", "Flask", "Docker", "AWS", "Google Cloud", "Kubernetes"],
+    category: "ML / AI",
+    items: ["PyTorch", "TensorFlow", "HuggingFace", "LangGraph", "LangChain", "OpenAI SDK", "Anthropic SDK", "Pydantic", "Scikit-learn"],
   },
   {
-    category: "AI / NLP",
-    items: ["HuggingFace", "SpaCy", "NLTK", "Gensim", "StanfordNLP", "FastText", "Prompt Engineering", "AI Safety", "LLM Jailbreaks"],
+    category: "Systems",
+    items: ["AWS (SageMaker, OpenSearch, Lambda)", "Azure (OpenAI, AI Search, Container Apps, Cosmos DB)", "Docker", "Kubernetes", "FastAPI", "Django"],
+  },
+  {
+    category: "NLP / Research",
+    items: ["SpaCy", "NLTK", "Gensim", "StanfordNLP", "Prompt Engineering", "RAG", "Hallucination Detection", "AI Safety", "Adversarial Evaluation"],
   },
 ];
 
