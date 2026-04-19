@@ -422,7 +422,7 @@ const publications: Publication[] = [
   },
   {
     title: "An Inference-Centric Approach to Natural Language Processing and Cognitive Modeling",
-    venue: "Ph.D. Dissertation · 2025",
+    venue: "Ph.D. Dissertation · 2024",
     authors: "A. Nighojkar",
     link: "https://digitalcommons.usf.edu/etd/10546/",
   },
