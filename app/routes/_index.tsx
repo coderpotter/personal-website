@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { useTheme } from "~/root";
 
 export const meta: MetaFunction = () => {
@@ -31,6 +32,7 @@ export default function Index() {
               <a href="#about"        className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">About</a>
               <a href="#experience"   className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Experience</a>
               <a href="#publications" className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Publications</a>
+              <Link to="/writing/autocomplete-developer" className={`${ACCENT} hover:opacity-70 transition-opacity`}>Writing</Link>
             </div>
             <button
               onClick={toggleTheme}
