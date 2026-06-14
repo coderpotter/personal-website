@@ -2,8 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    "./app/**/*.{ts,tsx}",
-    "./app/routes/**/*.{ts,tsx}"
+    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"
   ],
   darkMode: "class",
   theme: {

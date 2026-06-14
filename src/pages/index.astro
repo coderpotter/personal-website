@@ -1,0 +1,437 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const ACCENT = "text-[#C93D0E] dark:text-[#FF6B35]";
+const ACCENT_BORDER = "border-[#C93D0E] dark:border-[#FF6B35]";
+const MUTED = "text-[#111111]/50 dark:text-[#EDE9E1]/50";
+const RULE = "border-[#111111]/10 dark:border-[#EDE9E1]/10";
+
+const experiences = [
+  {
+    title: "VP, Engineering",
+    company: "Actualization.AI",
+    companyUrl: "https://actualization.ai",
+    location: "Tampa, FL",
+    period: "Sep 2025 – Present",
+    bullets: [
+      "Delivered two independent production LLM systems: a multi-agent contract analysis platform on AWS (LangGraph, SageMaker, OpenSearch) and SquarePact on Azure (Anthropic Foundry, Azure OpenAI, AI Search). Enabled comparative study of orchestration approaches (LangGraph vs. DeepAgents) and retrieval architectures across cloud environments.",
+      "Engineered 80+ domain-specific LLM personas with Pydantic schema validation for structured output extraction; architected SquarePact's DeepAgents framework (Claude Haiku/Sonnet, GPT-4) with specialized subagent roles, generating empirical findings on agent specialization, output reliability, and failure mode distribution at scale.",
+      "Built and benchmarked two retrieval pipelines: SageMaker embeddings to OpenSearch with 256-concurrent asyncio ops (90% latency cut, 70% cost cut); and SquarePact's hybrid RAG on Azure AI Search with dense (text-embedding-3-large, 3072-dim), BM25, and hybrid modes with TTL caching.",
+      "Invented a novel self-healing structured output pipeline (Regex to Python AST to Generative Repair) that guarantees valid JSON from any LLM response, eliminating production parse failures with no latency penalty for well-formed outputs. A general decoding fallback applicable beyond this system.",
+      "Designed a two-agent document editing pipeline: a reasoning agent proposes edits in Markdown while a constraint-enforcing verifier subagent converts to OOXML with formal preservation guarantees on paragraph structure, hyperlinks, and embedded objects, synced to OneDrive via Microsoft Graph.",
+    ],
+  },
+  {
+    title: "Founding Engineer",
+    company: "Actualization.AI",
+    companyUrl: "https://actualization.ai",
+    location: "Tampa, FL",
+    period: "Sep 2024 – Sep 2025",
+    bullets: [
+      "PI on a $275K NSF SBIR Phase-I grant for legal AI; designed and shipped hallucination detection infrastructure: reproducible CI/CD for prompt templating, generation tracing, and automated LLM safety benchmarking with standardized adversarial robustness metrics.",
+      "Built production Playwright scrapers for large-scale legal corpus acquisition (proxy rotation, anti-bot evasion, CAPTCHA solving, rate-limit backoff, 99% uptime), providing the training and evaluation data pipeline for NLP research on hallucination in high-stakes legal reasoning.",
+      "Built and open-sourced tireKicker (GPL-3.0), a Python CLI for systematic adversarial probing of conversational AI, operationalizing the NSF-funded safety evaluation methodology into a reproducible, community-accessible benchmarking tool.",
+      "Built a high-throughput RAG research assistant platform with vector search over scientific literature and containerized Python + TypeScript microservices on Kubernetes, enabling scalable, reproducible NLP research workflows for literature retrieval, hypothesis exploration, and experiment tracking.",
+    ],
+  },
+  {
+    title: "Machine Learning Intern",
+    company: "Dropbox",
+    companyUrl: "https://dropbox.com",
+    location: "Remote",
+    period: "May – Aug 2023",
+    bullets: [
+      "Implemented an end-to-end video object removal pipeline (interactive segmentation on a paused frame, temporal tracking, seamless inpainting), validating the practical viability of chaining CV methods in a real-time production pipeline; integrated with front-end and placed 3rd at Dropbox Hack Week 2023.",
+    ],
+  },
+  {
+    title: "Machine Learning Intern",
+    company: "Dropbox",
+    companyUrl: "https://dropbox.com",
+    location: "Remote",
+    period: "May – Aug 2022",
+    bullets: [
+      "Trained and deployed a long-document summarization service with no context ceiling; designed hierarchical chunking and aggregation strategies to extend transformer summarization beyond fixed context windows, and prototyped the full-stack UI for VP demonstration.",
+    ],
+  },
+  {
+    title: "Graduate Research Assistant",
+    company: "University of South Florida",
+    companyUrl: "https://www.usf.edu/",
+    location: "Tampa, FL",
+    period: "Sep 2019 – Aug 2024",
+    bullets: [
+      "Led an 8-person team to 1st place at COLIEE-2024 (the premier international legal reasoning AI competition); engineered prompting strategies and retrieval pipelines for legal entailment and statute retrieval, contributing novel architectures published in New Frontiers in Artificial Intelligence.",
+      "Conducted foundational NLP research across three lines: pre-trained BERT from scratch to investigate transformer learning dynamics; modeled human semantic fluency and memory retrieval with transformers (IJCAI 2022); engineered GPT-4 pipelines for psychometric dataset construction and AI persona studies (arXiv 2025). 8 publications across ACL, IJCAI, FLAIRS, and legal AI venues.",
+    ],
+  },
+];
+
+const education = [
+  {
+    degree: "Ph.D. in Computer Science and Engineering",
+    institution: "University of South Florida",
+    institutionUrl: "https://www.usf.edu/",
+    year: "Aug 2024",
+  },
+  {
+    degree: "M.S. in Computer Science and Engineering",
+    institution: "University of South Florida",
+    institutionUrl: "https://www.usf.edu/",
+    year: "Dec 2021",
+  },
+  {
+    degree: "B.E. in Computer Science and Engineering",
+    institution: "Rajiv Gandhi Technical University",
+    institutionUrl: "https://www.rgpv.ac.in/",
+    year: "May 2019",
+  },
+];
+
+const skillGroups = [
+  {
+    category: "Languages",
+    items: ["Python", "C++", "Java", "Rust", "JavaScript", "TypeScript", "SQL", "Scala", "Bash", "LaTeX"],
+  },
+  {
+    category: "ML / AI",
+    items: ["PyTorch", "TensorFlow", "HuggingFace", "LangGraph", "LangChain", "OpenAI SDK", "Anthropic SDK", "Pydantic", "Scikit-learn"],
+  },
+  {
+    category: "Systems",
+    items: ["AWS (SageMaker, OpenSearch, Lambda)", "Azure (OpenAI, AI Search, Container Apps, Cosmos DB)", "Docker", "Kubernetes", "FastAPI", "Django"],
+  },
+  {
+    category: "NLP / Research",
+    items: ["SpaCy", "NLTK", "Gensim", "StanfordNLP", "Prompt Engineering", "RAG", "Hallucination Detection", "AI Safety", "Adversarial Evaluation"],
+  },
+];
+
+const publications = [
+  {
+    title: "Giving AI Personalities Leads to More Human-Like Reasoning",
+    venue: "arXiv · 2025",
+    authors: "A. Nighojkar, B. Moydinboyev, M. Duong, J. Licato",
+    link: "https://arxiv.org/abs/2502.14155",
+  },
+  {
+    title: "An Inference-Centric Approach to Natural Language Processing and Cognitive Modeling",
+    venue: "Ph.D. Dissertation · 2024",
+    authors: "A. Nighojkar",
+    link: "https://digitalcommons.usf.edu/etd/10546/",
+  },
+  {
+    title: "AMHR COLIEE 2024 Entry: Legal Entailment and Retrieval",
+    venue: "New Frontiers in Artificial Intelligence · 2024",
+    authors: "A. Nighojkar, K. Jiang, L. Fields, O. Bilgin, S. Steinle, Y. Sadybekov, Z. Marji, J. Licato",
+    link: "https://link.springer.com/chapter/10.1007/978-981-97-3076-6_14",
+  },
+  {
+    title: "Exploring Prompting Approaches in Legal Textual Entailment",
+    venue: "The Review of Socionetwork Strategies · 2024",
+    authors: "O. Bilgin, L. Fields, A. Laverghetta Jr, Z. Marji, A. Nighojkar, S. Steinle, J. Licato",
+    link: "https://link.springer.com/article/10.1007/s12626-023-00154-y",
+  },
+  {
+    title: "No Strong Feelings One Way or Another: Re-operationalizing Neutrality in Natural Language Inference",
+    venue: "17th Linguistic Annotation Workshop · 2023",
+    authors: "A. Nighojkar, A. Laverghetta Jr, J. Licato",
+    link: "https://aclanthology.org/2023.law-1.20/",
+  },
+  {
+    title: "Cognitive Modeling of Semantic Fluency Using Transformers",
+    venue: "IJCAI: Cognitive Aspects of Knowledge Representation · 2022",
+    authors: "A. Nighojkar, A. Khlyzova, J. Licato",
+    link: "https://arxiv.org/abs/2208.09719",
+  },
+  {
+    title: "Improving Paraphrase Detection with the Adversarial Paraphrasing Task",
+    venue: "ACL · 2021",
+    authors: "A. Nighojkar, J. Licato",
+    link: "https://aclanthology.org/2021.acl-long.552/",
+  },
+  {
+    title: "Mutual Implication as a Measure of Textual Equivalence",
+    venue: "FLAIRS Conference · 2021",
+    authors: "A. Nighojkar, J. Licato",
+    link: "https://journals.flvc.org/FLAIRS/article/view/128519",
+  },
+];
+
+const writings = [
+  {
+    title: "The Temperature Zero Myth",
+    date: "June 2026",
+    link: "/writing/temperature-zero-myth",
+  },
+];
+---
+
+<Layout title="Animesh Nighojkar">
+  <div class="min-h-screen bg-[#F8F6F1] dark:bg-[#0D0D0B] text-[#111111] dark:text-[#EDE9E1]">
+
+    <!-- ── Navigation ── -->
+    <nav class={`fixed top-0 w-full z-50 border-b ${RULE} bg-[#F8F6F1]/90 dark:bg-[#0D0D0B]/90 backdrop-blur-sm`}>
+      <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#hero" class={`font-mono text-sm tracking-[0.2em] uppercase ${MUTED} hover:text-[#C93D0E] dark:hover:text-[#FF6B35]`}>
+          AN
+        </a>
+        <div class="flex items-center gap-6 md:gap-8">
+          <div class={`hidden md:flex gap-8 font-mono text-xs tracking-widest uppercase ${MUTED}`}>
+            <a href="#about" class="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">About</a>
+            <a href="#experience" class="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Experience</a>
+            <a href="#publications" class="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Publications</a>
+            <a href="#writing" class={`${ACCENT} hover:opacity-70 transition-opacity`}>Writing</a>
+          </div>
+          <button
+            id="theme-toggle"
+            aria-label="Toggle theme"
+            class={`font-mono text-xs tracking-widest uppercase ${MUTED} hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors`}
+          >
+            <span class="dark:hidden">Dark</span>
+            <span class="hidden dark:inline">Light</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── Hero ── -->
+    <section id="hero" class="pt-28 pb-16 max-w-5xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-12">
+        <div class="flex-1">
+          <p class={`font-mono text-xs tracking-[0.25em] uppercase ${ACCENT} mb-8`}>
+            VP Engineering · AI Research
+          </p>
+          <h1 class="font-serif text-[clamp(3.5rem,11vw,8.5rem)] leading-[0.92] tracking-tight text-[#111111] dark:text-[#EDE9E1]">
+            Animesh<br />Nighojkar
+          </h1>
+          <p class={`mt-8 max-w-sm text-[15px] leading-relaxed ${MUTED}`}>
+            PhD in NLP. Building production AI at the intersection of research
+            and systems: multi-agent orchestration, RAG, hallucination detection.
+            PI on a $275K NSF SBIR grant.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-6 font-mono text-xs tracking-wider">
+            <a href="https://www.linkedin.com/in/anighojkar/" target="_blank" rel="noopener noreferrer" class={`border-b pb-px ${ACCENT_BORDER} ${ACCENT} hover:opacity-70 transition-opacity`}>
+              LinkedIn ↗
+            </a>
+            <a href="https://scholar.google.com/citations?user=aWECOUMAAAAJ" target="_blank" rel="noopener noreferrer" class={`border-b pb-px ${ACCENT_BORDER} ${ACCENT} hover:opacity-70 transition-opacity`}>
+              Google Scholar ↗
+            </a>
+          </div>
+        </div>
+        <div class="md:pt-2 flex-shrink-0">
+          <img
+            src="/AM-19.png"
+            alt="Animesh Nighojkar"
+            class="w-44 h-52 md:w-52 md:h-64 object-cover grayscale hover:grayscale-0"
+            style="object-position: center 10%;"
+            onerror="this.style.display='none'"
+          />
+        </div>
+      </div>
+      <div class={`mt-16 pt-6 border-t ${RULE} flex flex-wrap gap-6 font-mono text-xs ${MUTED}`}>
+        <span>Tampa, FL</span>
+        <a href="mailto:a@nighojkar.com" class="hover:text-[#C93D0E] dark:hover:text-[#FF6B35] transition-colors">a@nighojkar.com</a>
+        <a href="tel:+16463715208" class="hover:text-[#C93D0E] dark:hover:text-[#FF6B35] transition-colors">(646) 371-5208</a>
+      </div>
+    </section>
+
+    <!-- ── About ── -->
+    <section id="about" class="py-20 max-w-5xl mx-auto px-6">
+      <div class="flex items-baseline gap-4">
+        <span class={`font-mono text-xs tracking-widest ${MUTED}`}>01</span>
+        <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">About</h2>
+      </div>
+      <div class="mt-10 grid md:grid-cols-[1fr_2fr] gap-12">
+        <div></div>
+        <div class="space-y-5 text-[15px] leading-relaxed text-[#111111]/80 dark:text-[#EDE9E1]/80">
+          <p>
+            PhD in NLP and production ML engineer at
+            <a href="https://actualization.ai" target="_blank" rel="noopener noreferrer" class={`${ACCENT} hover:opacity-70 transition-opacity`}>Actualization.AI</a>,
+            building legal AI at the intersection of research and systems.
+            I work across the full stack: multi-agent orchestration, hybrid RAG pipelines,
+            hallucination detection, structured output validation, deployed at scale on AWS and Azure.
+          </p>
+          <p>
+            PI on a $275K NSF SBIR Phase-I grant. Led an 8-person team to first place at
+            <a href="https://sites.ualberta.ca/~rabelo/COLIEE2024/" target="_blank" rel="noopener noreferrer" class={`${ACCENT} hover:opacity-70 transition-opacity`}>COLIEE-2024</a>,
+            the premier international legal reasoning AI competition. Two ML internships at Dropbox.
+            Eight peer-reviewed publications across ACL, IJCAI, FLAIRS, and legal AI venues.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Experience ── -->
+    <section id="experience" class={`py-20 border-t ${RULE}`}>
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-baseline gap-4">
+          <span class={`font-mono text-xs tracking-widest ${MUTED}`}>02</span>
+          <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">Experience</h2>
+        </div>
+        <div class="mt-10 space-y-0">
+          {experiences.map((exp) => (
+            <div class={`py-10 border-b ${RULE} grid md:grid-cols-[200px_1fr] gap-6 md:gap-12`}>
+              <div class="md:pt-1">
+                <span class={`font-mono text-xs tracking-wide ${MUTED}`}>{exp.period}</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-medium text-[#111111] dark:text-[#EDE9E1] mb-1">{exp.title}</h3>
+                <p class="mb-4">
+                  <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer" class={`font-mono text-xs tracking-wider uppercase ${ACCENT} hover:opacity-70 transition-opacity`}>
+                    {exp.company}
+                  </a>
+                  <span class={`font-mono text-xs ml-3 ${MUTED}`}>{exp.location}</span>
+                </p>
+                <ul class="space-y-2.5 text-[14px] leading-relaxed text-[#111111]/70 dark:text-[#EDE9E1]/70">
+                  {exp.bullets.map((b) => (
+                    <li class="flex gap-3">
+                      <span class="mt-[7px] w-1 h-1 rounded-full flex-shrink-0 bg-[#C93D0E] dark:bg-[#FF6B35] opacity-60"></span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Education ── -->
+    <section id="education" class={`py-20 border-t ${RULE}`}>
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-baseline gap-4">
+          <span class={`font-mono text-xs tracking-widest ${MUTED}`}>03</span>
+          <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">Education</h2>
+        </div>
+        <div class="mt-10 space-y-0">
+          {education.map((ed) => (
+            <div class={`py-8 border-b ${RULE} grid md:grid-cols-[200px_1fr] gap-4 md:gap-12`}>
+              <span class={`font-mono text-xs tracking-wide ${MUTED} md:pt-1`}>{ed.year}</span>
+              <div>
+                <h3 class="text-base font-medium text-[#111111] dark:text-[#EDE9E1] mb-1">{ed.degree}</h3>
+                <a href={ed.institutionUrl} target="_blank" rel="noopener noreferrer" class={`font-mono text-xs tracking-wider uppercase ${ACCENT} hover:opacity-70 transition-opacity`}>
+                  {ed.institution}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Skills ── -->
+    <section id="skills" class={`py-20 border-t ${RULE}`}>
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-baseline gap-4">
+          <span class={`font-mono text-xs tracking-widest ${MUTED}`}>04</span>
+          <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">Skills</h2>
+        </div>
+        <div class="mt-10 space-y-0">
+          {skillGroups.map((group) => (
+            <div class={`grid md:grid-cols-[200px_1fr] gap-2 md:gap-8 py-5 border-b border-[#111111]/5 dark:border-[#EDE9E1]/5`}>
+              <span class={`font-mono text-xs tracking-widest uppercase ${MUTED} pt-0.5`}>
+                {group.category}
+              </span>
+              <p class="text-[14px] leading-relaxed text-[#111111]/80 dark:text-[#EDE9E1]/80">
+                {group.items.join(" · ")}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Publications ── -->
+    <section id="publications" class={`py-20 border-t ${RULE}`}>
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-baseline gap-4">
+          <span class={`font-mono text-xs tracking-widest ${MUTED}`}>05</span>
+          <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">Selected Publications</h2>
+        </div>
+        <div class="mt-10 space-y-0">
+          {publications.map((pub, i) => (
+            <div class={`py-8 border-b ${RULE} grid md:grid-cols-[200px_1fr] gap-4 md:gap-12`}>
+              <span class={`font-mono text-xs tracking-wide ${MUTED} md:pt-1`}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 class="text-[15px] font-medium text-[#111111] dark:text-[#EDE9E1] leading-snug mb-2">
+                  {pub.link ? (
+                    <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition-opacity">
+                      {pub.title}
+                    </a>
+                  ) : pub.title}
+                </h3>
+                <p class={`font-mono text-xs tracking-wide ${ACCENT} mb-1`}>{pub.venue}</p>
+                <p class={`text-xs ${MUTED}`}>{pub.authors}</p>
+                {pub.link && (
+                  <a href={pub.link} target="_blank" rel="noopener noreferrer" class={`inline-flex items-center mt-3 font-mono text-xs tracking-wider ${ACCENT} hover:opacity-70 transition-opacity`}>
+                    View ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Writing ── -->
+    <section id="writing" class={`py-20 border-t ${RULE}`}>
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-baseline gap-4">
+          <span class={`font-mono text-xs tracking-widest ${MUTED}`}>06</span>
+          <h2 class="font-serif text-3xl md:text-4xl text-[#111111] dark:text-[#EDE9E1]">Writing</h2>
+        </div>
+        <div class="mt-10 space-y-0">
+          {writings.map((article, i) => (
+            <div class={`py-8 border-b ${RULE} grid md:grid-cols-[200px_1fr] gap-4 md:gap-12`}>
+              <span class={`font-mono text-xs tracking-wide ${MUTED} md:pt-1`}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 class="text-[15px] font-medium text-[#111111] dark:text-[#EDE9E1] leading-snug mb-2">
+                  <a href={article.link} class="hover:opacity-60 transition-opacity">
+                    {article.title}
+                  </a>
+                </h3>
+                <p class={`font-mono text-xs tracking-wide ${ACCENT} mb-1`}>{article.date}</p>
+                <a href={article.link} class={`inline-flex items-center mt-3 font-mono text-xs tracking-wider ${ACCENT} hover:opacity-70 transition-opacity`}>
+                  Read Essay ↗
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer ── -->
+    <footer class={`border-t ${RULE} py-10`}>
+      <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <span class={`font-mono text-xs tracking-[0.2em] uppercase ${MUTED}`}>
+          Animesh Nighojkar
+        </span>
+        <span class={`font-mono text-xs ${MUTED}`}>
+          © {new Date().getFullYear()}
+        </span>
+      </div>
+    </footer>
+  </div>
+</Layout>
+
+<script>
+  const toggleBtn = document.getElementById('theme-toggle');
+  toggleBtn?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+</script>
