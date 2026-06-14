@@ -57,7 +57,6 @@ function OrbitalRing({ radius, speed, axis, baseRotation, syncFactor, text }: an
           color={syncFactor > 0.8 ? "#FF6B35" : "#FFF"}
           anchorX="center"
           anchorY="middle"
-          font="/fonts/Inter-Bold.ttf"
           material-transparent
           material-opacity={0.4 + syncFactor * 0.6}
         >
@@ -158,11 +157,13 @@ export default function EchoChamber() {
       <div className="relative h-[400px] w-full cursor-crosshair">
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(ellipse at center, #FF6B35 0%, transparent 60%)' }}></div>
         
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING SELF-ATTENTION ORBITALS...</div>}>
+        
           <Canvas camera={{ position: [0, 5, 8], fov: 60 }}>
+            <Suspense fallback={null}>
             <Scene injections={injections} />
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
 
         <div className="absolute top-6 left-6 font-mono text-[10px] text-white/40 tracking-widest uppercase bg-[#111]/80 px-3 py-1 rounded backdrop-blur">
           Probability Distribution (Entropy)

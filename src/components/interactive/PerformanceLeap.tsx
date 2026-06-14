@@ -184,11 +184,13 @@ export default function PerformanceLeap() {
       </div>
 
       <div className="relative h-[500px] w-full cursor-crosshair">
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING VOLUMETRIC SCENE...</div>}>
+        
           <Canvas camera={{ position: [0, 2, 10], fov: 60 }}>
+            <Suspense fallback={null}>
             <EruptionScene emInf={emInf} />
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
 
         <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none">
           <span className={`font-mono text-5xl tabular-nums transition-all duration-1000 ${emInf ? 'text-[#FF6B35] drop-shadow-[0_0_20px_#FF6B35] -translate-y-16 scale-125' : 'text-[#FF6B35]/80'}`}>

@@ -44,7 +44,7 @@ function FallingBlock({ position, label, color, delay }: { position: [number, nu
           roughness={0.2} 
           metalness={0.8} 
         />
-        <Text position={[0, 0, 0.41]} fontSize={0.6} color="white" font="/fonts/Inter-Bold.ttf" anchorX="center" anchorY="middle">
+        <Text position={[0, 0, 0.41]} fontSize={0.6} color="white" anchorX="center" anchorY="middle">
           {label}
         </Text>
       </Box>
@@ -71,7 +71,7 @@ function Scene({ keyCount, load }: { keyCount: number, load: number }) {
         <FallingBlock key={`C-${keyCount}`} label="C" color="#50E3C2" position={[2 + dropOffset, 9, 0]} delay={load > 50 ? 0 : 200} />
 
         {/* The Accumulator Core */}
-        <RigidBody type="fixed" position={[0, -4, 0]} colliders="hull">
+        <RigidBody type="fixed" position={[0, -4, 0]} colliders="ball">
           <Sphere args={[1, 32, 32]}>
             <meshStandardMaterial color="#111" emissive="#C93D0E" emissiveIntensity={load > 50 ? 0.8 : 0.2} wireframe />
           </Sphere>
@@ -131,11 +131,13 @@ export default function FloatingPointShuffle() {
       {/* 3D Viewport */}
       <div className="h-[400px] w-full bg-[#050505] relative cursor-crosshair">
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, #FF6B35 0%, transparent 60%)' }}></div>
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING PHYSICS ENGINE...</div>}>
+        
           <Canvas camera={{ position: [0, 2, 12], fov: 50 }}>
+            <Suspense fallback={null}>
             <Scene keyCount={keyCount} load={load} />
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
 
         {/* Floating Overlay for Math */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#111]/80 backdrop-blur-md border border-white/10 px-6 py-4 rounded text-center min-w-[280px]">

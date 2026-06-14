@@ -135,11 +135,13 @@ export default function LatentSpace3D() {
       </div>
 
       <div className="h-[500px] w-full">
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">INITIALIZING LATENT SPACE...</div>}>
+        
           <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+            <Suspense fallback={null}>
             <ParticleNebula isAnchor={isAnchor} />
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
       </div>
 
       <div className="p-4 border-t border-white/10 bg-[#0D0D0B] flex items-center justify-center gap-3">

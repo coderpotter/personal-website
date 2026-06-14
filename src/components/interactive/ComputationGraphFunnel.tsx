@@ -138,8 +138,9 @@ export default function ComputationGraphFunnel() {
       <div className="relative h-[400px] w-full cursor-crosshair">
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(ellipse at center, #50E3C2 0%, transparent 70%)' }}></div>
         
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING GRAPH PHYSICS...</div>}>
+        
           <Canvas camera={{ position: [0, 2, 8], fov: 60 }}>
+            <Suspense fallback={null}>
             <ambientLight intensity={0.2} />
             <directionalLight position={[5, 10, 5]} intensity={1} />
             <Environment preset="city" />
@@ -149,8 +150,9 @@ export default function ComputationGraphFunnel() {
             <EffectComposer>
               <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
             </EffectComposer>
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
 
         <div className="absolute top-6 left-6 font-mono text-[10px] text-[#50E3C2]/50 tracking-widest uppercase">
           Prompt In

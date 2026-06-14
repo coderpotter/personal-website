@@ -55,7 +55,6 @@ function HashProcessor({ scrub, noiseString }: { scrub: number, noiseString: str
             color={passed ? "#50E3C2" : "#FFF"}
             anchorX="center"
             anchorY="middle"
-            font="/fonts/Inter-Bold.ttf"
             material-transparent
             material-opacity={Math.max(0, 1 - Math.abs(zPos) * 0.15)}
           >
@@ -116,8 +115,9 @@ export default function ASCIIMathPipeline() {
         {/* Background glow */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'linear-gradient(to bottom, #050505, #112222)' }}></div>
         
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING WEBGL PIPELINE...</div>}>
+        
           <Canvas camera={{ position: [2, 1, 6], fov: 60 }}>
+            <Suspense fallback={null}>
             <ambientLight intensity={0.2} />
             <directionalLight position={[0, 10, 5]} intensity={2} />
             <Environment preset="city" />
@@ -127,8 +127,9 @@ export default function ASCIIMathPipeline() {
             <EffectComposer>
               <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
             </EffectComposer>
+            </Suspense>
           </Canvas>
-        </Suspense>
+        
 
         {/* Floating HUD */}
         <div className="absolute bottom-6 right-6 flex flex-col gap-4 text-right">
