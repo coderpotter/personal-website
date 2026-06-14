@@ -1,5 +1,118 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useMemo, Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Sphere, Text, Environment } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
+
+function OrbitalRing({ radius, speed, axis, baseRotation, syncFactor, text }: any) {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  // Create a circle of text
+  const numItems = 8;
+  const items = useMemo(() => {
+    return Array.from({ length: numItems }).map((_, i) => {
+      const angle = (i / numItems) * Math.PI * 2;
+      return {
+        position: [Math.cos(angle) * radius, 0, Math.sin(angle) * radius] as [number, number, number],
+        rotation: [0, -angle + Math.PI/2, 0] as [number, number, number]
+      };
+    });
+  }, [radius, numItems]);
+
+  const currentAxis = useRef(axis.clone());
+
+  useFrame((state, delta) => {
+    if (groupRef.current) {
+      // Interpolate axis towards Y-axis (0,1,0) based on syncFactor (0 to 1)
+      const targetAxis = new THREE.Vector3(0, 1, 0);
+      currentAxis.current.lerp(targetAxis, delta * (syncFactor * 2));
+      
+      // Interpolate base rotation to 0 based on syncFactor
+      const targetRotation = new THREE.Euler(
+        THREE.MathUtils.lerp(baseRotation[0], 0, syncFactor),
+        THREE.MathUtils.lerp(baseRotation[1], 0, syncFactor),
+        THREE.MathUtils.lerp(baseRotation[2], 0, syncFactor)
+      );
+      
+      groupRef.current.setRotationFromEuler(targetRotation);
+      groupRef.current.rotateOnAxis(currentAxis.current.normalize(), state.clock.elapsedTime * speed);
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Visual ring line */}
+      <mesh rotation={[Math.PI/2, 0, 0]}>
+        <ringGeometry args={[radius - 0.02, radius + 0.02, 64]} />
+        <meshBasicMaterial color="#FF6B35" transparent opacity={0.2 + syncFactor * 0.3} />
+      </mesh>
+      
+      {/* Text items */}
+      {items.map((item, i) => (
+        <Text
+          key={i}
+          position={item.position}
+          rotation={item.rotation}
+          fontSize={0.2}
+          color={syncFactor > 0.8 ? "#FF6B35" : "#FFF"}
+          anchorX="center"
+          anchorY="middle"
+          font="/fonts/Inter-Bold.ttf"
+          material-transparent
+          material-opacity={0.4 + syncFactor * 0.6}
+        >
+          {text}
+        </Text>
+      ))}
+    </group>
+  );
+}
+
+function Scene({ injections }: { injections: number }) {
+  const syncFactor = injections / 5; // 0 to 1
+
+  const rings = useMemo(() => [
+    { radius: 2, speed: 0.5, axis: new THREE.Vector3(1, 1, 0).normalize(), baseRotation: [0.5, 0.2, 1], text: "STATE" },
+    { radius: 3, speed: -0.3, axis: new THREE.Vector3(0, 1, 1).normalize(), baseRotation: [-0.8, 0.5, 0.2], text: "CONTEXT" },
+    { radius: 4, speed: 0.2, axis: new THREE.Vector3(1, 0, 1).normalize(), baseRotation: [0.2, -0.6, 0.8], text: "TOKEN" },
+  ], []);
+
+  const coreRef = useRef<THREE.Mesh>(null);
+  
+  useFrame((state, delta) => {
+    if (coreRef.current) {
+      // Pulse core based on syncFactor
+      const pulse = 1 + Math.sin(state.clock.elapsedTime * (10 * syncFactor)) * (0.1 * syncFactor);
+      coreRef.current.scale.set(pulse, pulse, pulse);
+    }
+  });
+
+  return (
+    <>
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[0, 10, 5]} intensity={1} />
+      <Environment preset="city" />
+
+      {/* The Central LLM Core */}
+      <Sphere ref={coreRef} args={[0.5, 32, 32]}>
+        <meshStandardMaterial 
+          color="#000" 
+          emissive="#FF6B35" 
+          emissiveIntensity={0.5 + syncFactor * 4} // Gets blindingly bright
+        />
+      </Sphere>
+
+      {/* The Attention Rings */}
+      {rings.map((ring, i) => (
+        <OrbitalRing key={i} {...ring} syncFactor={syncFactor} />
+      ))}
+
+      <EffectComposer>
+        <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5 + syncFactor * 2} />
+      </EffectComposer>
+    </>
+  );
+}
 
 export default function EchoChamber() {
   const [injections, setInjections] = useState(0);
@@ -12,90 +125,57 @@ export default function EchoChamber() {
     setInjections(0);
   };
 
-  // Math for the bell curve: y = e^(-x^2 / (2 * variance))
-  // The variance decreases with each injection.
   const variance = Math.max(0.01, 2 - injections * 0.45);
-  
-  // Generate SVG path for bell curve
-  const points = [];
-  for (let x = -5; x <= 5; x += 0.1) {
-    const y = Math.exp(-(x * x) / (2 * variance));
-    // map x: -5..5 -> 0..600
-    // map y: 0..1 -> 200..0
-    const sx = ((x + 5) / 10) * 600;
-    const sy = 200 - y * 180;
-    points.push(`${sx},${sy}`);
-  }
-  const d = `M ${points.join(" L ")}`;
 
   return (
-    <div className="my-16 p-8 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02]">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#050505] overflow-hidden">
+      <div className="p-8 border-b border-white/10 bg-[#0D0D0B] flex flex-col md:flex-row justify-between items-end gap-6 relative z-10">
         <div>
-          <h4 className="font-serif text-xl text-[#111111] dark:text-[#EDE9E1] mb-2">
+          <h4 className="font-serif text-xl text-white mb-2">
             The Echo Chamber
           </h4>
-          <p className="text-[14px] text-[#111111]/60 dark:text-[#EDE9E1]/60">
+          <p className="text-[14px] text-white/60">
             Inject state matrix back into the context to induce State Collapse.
           </p>
         </div>
         <div className="flex gap-4">
           <button
             onClick={handleReset}
-            className="px-4 py-2 border border-[#111111]/20 dark:border-[#EDE9E1]/20 text-[#111111]/60 dark:text-[#EDE9E1]/60 rounded font-mono text-xs tracking-widest hover:bg-[#111111]/5 dark:hover:bg-[#EDE9E1]/5 transition-colors"
+            className="px-4 py-2 border border-white/20 text-white/60 rounded font-mono text-xs tracking-widest hover:bg-white/5 transition-colors"
           >
             Reset
           </button>
           <button
             onClick={handleInject}
             disabled={injections >= 5}
-            className="px-4 py-2 border border-[#C93D0E] text-[#C93D0E] dark:border-[#FF6B35] dark:text-[#FF6B35] rounded font-mono text-xs tracking-widest hover:bg-[#C93D0E]/10 dark:hover:bg-[#FF6B35]/10 transition-colors disabled:opacity-50"
+            className="px-6 py-2 bg-[#FF6B35] text-white font-mono text-xs font-bold tracking-widest uppercase hover:bg-[#C93D0E] transition-colors rounded shadow-[0_0_15px_rgba(255,107,53,0.4)] disabled:opacity-50"
           >
             Inject State
           </button>
         </div>
       </div>
 
-      <div className="relative h-[250px] w-full bg-[#F8F6F1] dark:bg-[#0D0D0B] border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded flex items-center justify-center overflow-hidden">
+      <div className="relative h-[400px] w-full cursor-crosshair">
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(ellipse at center, #FF6B35 0%, transparent 60%)' }}></div>
         
-        {/* The Bell Curve */}
-        <svg width="100%" height="200" viewBox="0 0 600 200" preserveAspectRatio="none" className="absolute bottom-0 z-10">
-          <motion.path
-            d={d}
-            stroke="currentColor"
-            strokeWidth="3"
-            fill="none"
-            className="text-[#C93D0E] dark:text-[#FF6B35]"
-            initial={false}
-            animate={{ d }}
-            transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
-          />
-          {/* Baseline */}
-          <path d="M 0 200 L 600 200" stroke="currentColor" strokeWidth="2" className="text-[#111111]/20 dark:text-[#EDE9E1]/20" />
-        </svg>
+        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING SELF-ATTENTION ORBITALS...</div>}>
+          <Canvas camera={{ position: [0, 5, 8], fov: 60 }}>
+            <Scene injections={injections} />
+          </Canvas>
+        </Suspense>
 
-        {/* Floating Context Blocks */}
-        <AnimatePresence>
-          {Array.from({ length: injections }).map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.5, x: 200, y: -50 }}
-              animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 0.5], x: [200, 0, -200], y: [-50, -80, -50] }}
-              transition={{ duration: 1.5, ease: "easeInOut", times: [0, 0.5, 1] }}
-              className="absolute z-20 font-mono text-[10px] tracking-widest text-white bg-[#C93D0E] dark:bg-[#FF6B35] px-3 py-1 rounded"
-              style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-            >
-              STATE_MATRIX_{i}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-
-        <div className="absolute top-4 left-4 font-mono text-[10px] text-[#111111]/40 dark:text-[#EDE9E1]/40">
+        <div className="absolute top-6 left-6 font-mono text-[10px] text-white/40 tracking-widest uppercase bg-[#111]/80 px-3 py-1 rounded backdrop-blur">
           Probability Distribution (Entropy)
         </div>
-        <div className="absolute top-4 right-4 font-mono text-[10px] text-[#C93D0E] dark:text-[#FF6B35]">
+        <div className="absolute top-6 right-6 font-mono text-[10px] text-[#FF6B35] bg-[#111]/80 px-3 py-1 rounded backdrop-blur border border-[#FF6B35]/30">
           Variance: {variance.toFixed(2)}
         </div>
+        
+        {injections === 5 && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-serif text-xl text-[#FF6B35] font-bold tracking-widest uppercase drop-shadow-[0_0_10px_#FF6B35]">
+            STATE COLLAPSE ACHIEVED
+          </div>
+        )}
       </div>
     </div>
   );

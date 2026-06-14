@@ -1,86 +1,163 @@
-import { useState, useRef } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useState, useMemo, useRef, Suspense, useEffect } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Sphere, Line, Environment } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
 
-export default function ComputationGraphFunnel() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(100);
+// Generate a random branching tree
+function generateTree(depth: number, x: number, y: number, z: number): any {
+  if (depth === 0) return { pos: new THREE.Vector3(x, y, z), children: [] };
   
-  // Transform x position to a clip path width (0% to 100%)
-  // Container is roughly 100% wide, we'll map 0-500px to 0-100%
-  const clipWidth = useTransform(x, [0, 500], ["0%", "100%"]);
-  const opacityLate = useTransform(x, [350, 450], [0, 1]);
-  const opacityEarly = useTransform(x, [0, 100], [0.2, 1]);
+  const numChildren = Math.floor(Math.random() * 3) + 1; // 1 to 3 children
+  const children = [];
+  for (let i = 0; i < numChildren; i++) {
+    const nextX = x + 1.5 + Math.random() * 0.5;
+    const nextY = y + (Math.random() - 0.5) * 4;
+    const nextZ = z + (Math.random() - 0.5) * 4;
+    children.push(generateTree(depth - 1, nextX, nextY, nextZ));
+  }
+  return { pos: new THREE.Vector3(x, y, z), children };
+}
+
+// Flatten tree into nodes and edges for easier rendering
+function flattenTree(node: any, nodes: THREE.Vector3[] = [], edges: [THREE.Vector3, THREE.Vector3][] = []) {
+  nodes.push(node.pos);
+  node.children.forEach((child: any) => {
+    edges.push([node.pos, child.pos]);
+    flattenTree(child, nodes, edges);
+  });
+  return { nodes, edges };
+}
+
+function GraphScene({ constraintX }: { constraintX: number }) {
+  const { nodes, edges } = useMemo(() => {
+    const tree = generateTree(5, -6, 0, 0); // 5 levels deep
+    return flattenTree(tree);
+  }, []);
+
+  const groupRef = useRef<THREE.Group>(null);
+  const materialRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.2;
+      groupRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.2) * 0.1;
+    }
+  });
+
+  // Calculate constraint world position: range slider is 0 to 100
+  // World X ranges roughly from -6 to 4 (length = 10)
+  const worldConstraintX = -6 + (constraintX / 100) * 10;
 
   return (
-    <div className="my-16 p-8 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02]">
-      <div className="mb-8 flex justify-between items-end">
-        <div>
-          <h4 className="font-serif text-xl text-[#111111] dark:text-[#EDE9E1] mb-2">
-            Drag the Constraint Wall
-          </h4>
-          <p className="text-[14px] text-[#111111]/60 dark:text-[#EDE9E1]/60">
-            Move left for early JSON clamping. Move right for Unified Decoding (State -1 to State 0).
-          </p>
+    <group ref={groupRef}>
+      {/* Render Edges */}
+      {edges.map((edge, i) => {
+        const p1 = edge[0].clone();
+        const p2 = edge[1].clone();
+        
+        // Squash logic based on constraint
+        if (p1.x > worldConstraintX) {
+          const squash = Math.max(0, 1 - (p1.x - worldConstraintX));
+          p1.y *= squash; p1.z *= squash;
+        }
+        if (p2.x > worldConstraintX) {
+          const squash = Math.max(0, 1 - (p2.x - worldConstraintX));
+          p2.y *= squash; p2.z *= squash;
+        }
+
+        const isConstrained = p2.x > worldConstraintX;
+
+        return (
+          <Line 
+            key={i} 
+            points={[p1, p2]} 
+            color={isConstrained ? "#FF6B35" : "#50E3C2"} 
+            lineWidth={isConstrained ? 3 : 1}
+            transparent 
+            opacity={isConstrained ? 1 : 0.4} 
+          />
+        );
+      })}
+
+      {/* Render Nodes */}
+      {nodes.map((pos, i) => {
+        const p = pos.clone();
+        if (p.x > worldConstraintX) {
+          const squash = Math.max(0, 1 - (p.x - worldConstraintX));
+          p.y *= squash; p.z *= squash;
+        }
+        
+        const isConstrained = p.x > worldConstraintX;
+
+        return (
+          <Sphere key={`node-${i}`} position={p} args={[0.1, 16, 16]}>
+            <meshStandardMaterial 
+              color={isConstrained ? "#FF6B35" : "#50E3C2"} 
+              emissive={isConstrained ? "#FF6B35" : "#50E3C2"} 
+              emissiveIntensity={isConstrained ? 2 : 0.5} 
+            />
+          </Sphere>
+        );
+      })}
+
+      {/* The Constraint Wall (Glass Pane) */}
+      <mesh position={[worldConstraintX, 0, 0]}>
+        <boxGeometry args={[0.1, 10, 10]} />
+        <meshPhysicalMaterial color="#FF6B35" transmission={0.9} opacity={0.5} transparent roughness={0.1} />
+      </mesh>
+    </group>
+  );
+}
+
+export default function ComputationGraphFunnel() {
+  const [constraintX, setConstraintX] = useState(80);
+
+  return (
+    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#050505] overflow-hidden">
+      <div className="p-8 border-b border-white/10 bg-[#0D0D0B] flex flex-col md:flex-row justify-between items-end gap-6 relative z-10">
+        <div className="flex-1 w-full">
+          <label className="font-mono text-xs tracking-widest uppercase text-white/50 block mb-4">
+            Constraint Wall Slider
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={constraintX}
+            onChange={(e) => setConstraintX(Number(e.target.value))}
+            className="w-full accent-[#FF6B35]"
+          />
+          <div className="flex justify-between mt-2 font-mono text-[10px] text-white/30">
+            <span>Early Clamping</span>
+            <span>Unconstrained (State -1)</span>
+          </div>
         </div>
       </div>
 
-      <div 
-        ref={containerRef}
-        className="relative h-[300px] w-full bg-[#F8F6F1] dark:bg-[#0D0D0B] border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded overflow-hidden"
-      >
-        {/* The Tree (SVG) */}
-        <motion.div 
-          className="absolute inset-0"
-          style={{ WebkitClipPath: useTransform(clipWidth, w => `polygon(0 0, ${w} 0, ${w} 100%, 0% 100%)`) }}
-        >
-          <svg width="100%" height="100%" viewBox="0 0 800 300" preserveAspectRatio="none">
-            {/* Base line */}
-            <path d="M 0 150 C 100 150, 150 150, 200 150" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
+      <div className="relative h-[400px] w-full cursor-crosshair">
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(ellipse at center, #50E3C2 0%, transparent 70%)' }}></div>
+        
+        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-white/20 font-mono text-xs tracking-widest">LOADING GRAPH PHYSICS...</div>}>
+          <Canvas camera={{ position: [0, 2, 8], fov: 60 }}>
+            <ambientLight intensity={0.2} />
+            <directionalLight position={[5, 10, 5]} intensity={1} />
+            <Environment preset="city" />
             
-            {/* Early branches (Truncated if wall is left) */}
-            <path d="M 200 150 C 250 50, 300 50, 400 50" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
-            <path d="M 200 150 C 250 250, 300 250, 400 250" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
-            <path d="M 200 150 L 400 150" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
-            
-            {/* Complex reasoning web */}
-            <path d="M 400 50 C 500 50, 500 100, 600 150" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
-            <path d="M 400 250 C 500 250, 500 200, 600 150" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#111111]/30 dark:text-[#EDE9E1]/30" />
-            <path d="M 400 150 L 600 150" stroke="currentColor" strokeWidth="2" fill="none" className="text-[#C93D0E] dark:text-[#FF6B35]" />
-            
-            {/* Funnel into JSON */}
-            <path d="M 600 150 L 700 150" stroke="currentColor" strokeWidth="4" fill="none" className="text-[#C93D0E] dark:text-[#FF6B35]" />
-          </svg>
+            <GraphScene constraintX={constraintX} />
 
-          {/* Labels for tree sections */}
-          <motion.div style={{ opacity: opacityEarly }} className="absolute left-[250px] top-[20px] font-mono text-[10px] text-[#111111]/40 dark:text-[#EDE9E1]/40">
-            State -1: Reasoning
-          </motion.div>
-          <motion.div style={{ opacity: opacityLate }} className="absolute right-[40px] top-[135px] font-mono text-sm text-[#C93D0E] dark:text-[#FF6B35] font-bold bg-[#F8F6F1] dark:bg-[#0D0D0B] p-2">
-            {"{ answer: 42 }"}
-          </motion.div>
-        </motion.div>
+            <EffectComposer>
+              <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
+            </EffectComposer>
+          </Canvas>
+        </Suspense>
 
-        {/* The Drag Wall */}
-        <motion.div
-          drag="x"
-          dragConstraints={containerRef}
-          dragElastic={0}
-          dragMomentum={false}
-          style={{ x }}
-          className="absolute top-0 bottom-0 w-2 bg-[#C93D0E] dark:bg-[#FF6B35] cursor-col-resize flex flex-col items-center justify-center group z-10"
-        >
-          <div className="absolute -top-8 whitespace-nowrap font-mono text-[10px] tracking-widest text-[#C93D0E] dark:text-[#FF6B35] bg-[#F8F6F1] dark:bg-[#0D0D0B] px-2 py-1 rounded border border-[#C93D0E]/30 dark:border-[#FF6B35]/30">
-            CONSTRAINT
-          </div>
-          <div className="h-12 w-6 bg-[#C93D0E] dark:bg-[#FF6B35] rounded-full flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
-            <div className="w-0.5 h-6 bg-[#F8F6F1] dark:bg-[#0D0D0B]" />
-            <div className="w-0.5 h-6 bg-[#F8F6F1] dark:bg-[#0D0D0B] ml-1" />
-          </div>
-        </motion.div>
-
-        {/* Start Point label */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-[10px] text-[#111111]/40 dark:text-[#EDE9E1]/40">
+        <div className="absolute top-6 left-6 font-mono text-[10px] text-[#50E3C2]/50 tracking-widest uppercase">
           Prompt In
+        </div>
+        
+        <div className="absolute bottom-6 right-6 font-mono text-sm text-[#FF6B35] font-bold bg-[#111]/80 backdrop-blur border border-white/10 px-4 py-2 rounded">
+          {constraintX < 50 ? '{"answer": 42}' : '<chaotic_output>'}
         </div>
       </div>
     </div>
