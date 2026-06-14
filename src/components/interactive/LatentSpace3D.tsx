@@ -1,154 +1,144 @@
-import { useState, useRef, useMemo, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial, Sphere, Environment } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import * as THREE from "three";
-
-function ParticleNebula({ isAnchor }: { isAnchor: boolean }) {
-  const pointsRef = useRef<THREE.Points>(null);
-  const targetTokenRef = useRef<THREE.Mesh>(null);
-  
-  const particleCount = 5000;
-  
-  // Initial random spherical distribution
-  const [positions, phases] = useMemo(() => {
-    const pos = new Float32Array(particleCount * 3);
-    const ph = new Float32Array(particleCount);
-    for (let i = 0; i < particleCount; i++) {
-      const r = 4 + Math.random() * 6;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos((Math.random() * 2) - 1);
-      
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      
-      ph[i] = Math.random() * Math.PI * 2;
-    }
-    return [pos, ph];
-  }, [particleCount]);
-
-  const currentPositions = useMemo(() => new Float32Array(positions), [positions]);
-
-  const tRef = useRef(0);
-
-  useFrame((state, delta) => {
-    const targetT = isAnchor ? 1 : 0;
-    tRef.current = THREE.MathUtils.lerp(tRef.current, targetT, delta * 2);
-    const t = tRef.current;
-    
-    const time = state.clock.elapsedTime;
-
-    if (pointsRef.current) {
-      const posAttr = pointsRef.current.geometry.attributes.position;
-      const arr = posAttr.array as Float32Array;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const idx = i * 3;
-        const ox = positions[idx];
-        const oy = positions[idx + 1];
-        const oz = positions[idx + 2];
-        
-        // Drift state
-        const driftX = ox + Math.sin(time * 0.5 + phases[i]) * 1.5;
-        const driftY = oy + Math.cos(time * 0.3 + phases[i]) * 1.5;
-        const driftZ = oz + Math.sin(time * 0.4 + phases[i]) * 1.5;
-        
-        // Singularity state (swirling into center)
-        const radius = Math.sqrt(ox*ox + oy*oy + oz*oz);
-        const swirlAngle = time * 2 + radius;
-        const targetRadius = Math.max(0.2, radius * (1 - t * 0.95)); // Collapse
-        
-        const swirlX = targetRadius * Math.cos(swirlAngle) * (ox / radius);
-        const swirlY = targetRadius * Math.sin(swirlAngle) * (oy / radius);
-        const swirlZ = targetRadius * Math.cos(swirlAngle * 0.5) * (oz / radius);
-
-        arr[idx] = THREE.MathUtils.lerp(driftX, swirlX, t);
-        arr[idx + 1] = THREE.MathUtils.lerp(driftY, swirlY, t);
-        arr[idx + 2] = THREE.MathUtils.lerp(driftZ, swirlZ, t);
-      }
-      posAttr.needsUpdate = true;
-      pointsRef.current.rotation.y = time * 0.1 * (1 + t * 5); // Spin faster when anchored
-    }
-
-    if (targetTokenRef.current) {
-      if (t < 0.5) {
-        // Wandering
-        targetTokenRef.current.position.x = Math.sin(time) * 3;
-        targetTokenRef.current.position.y = Math.cos(time * 0.8) * 3;
-        targetTokenRef.current.position.z = Math.sin(time * 1.2) * 3;
-      } else {
-        // Pulled to center
-        targetTokenRef.current.position.lerp(new THREE.Vector3(0, 0, 0), delta * 4);
-      }
-    }
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[10, 10, 10]} intensity={2} />
-      
-      <Points ref={pointsRef} positions={currentPositions} stride={3} frustumCulled={false}>
-        <PointMaterial transparent color="#50E3C2" size={0.05} sizeAttenuation={true} depthWrite={false} opacity={0.6} blending={THREE.AdditiveBlending} />
-      </Points>
-
-      {/* Target Token */}
-      <Sphere ref={targetTokenRef} args={[0.4, 32, 32]}>
-        <meshStandardMaterial color="#FF6B35" emissive="#FF6B35" emissiveIntensity={2} toneMapped={false} />
-      </Sphere>
-
-      {/* Center Black Hole (only visible when anchored) */}
-      <Sphere args={[0.3, 32, 32]} scale={isAnchor ? 1 : 0}>
-        <meshBasicMaterial color="#000000" />
-      </Sphere>
-
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.5} mipmapBlur intensity={2.0} />
-      </EffectComposer>
-    </>
-  );
-}
+import { useState, useRef } from "react";
+import { motion, useAnimation } from "framer-motion";
 
 export default function LatentSpace3D() {
-  const [isAnchor, setIsAnchor] = useState(false);
+  const [specificity, setSpecificity] = useState(0); // 0 to 100
+  const marbleControls = useAnimation();
+  const [outcome, setOutcome] = useState<string>("Waiting for generation...");
+
+  // Calculate the depth of the central gravity well
+  const wellDepth = specificity; // 0 (flat) to 100 (deep)
+
+  // Generate SVG path for the topological landscape
+  const generateLandscape = () => {
+    let path = "M 0 150 ";
+    for (let x = 0; x <= 600; x += 10) {
+      // Base noise
+      let y = 150 + Math.sin(x * 0.05) * 15;
+      
+      // Central well (at x=300)
+      const distToCenter = Math.abs(x - 300);
+      const wellEffect = Math.max(0, 150 - distToCenter) / 150; // 1 at center, 0 at 150px away
+      
+      y += wellEffect * wellDepth * 1.5; // Dig deep
+
+      path += `L ${x} ${y} `;
+    }
+    return path;
+  };
+
+  const handleNoise = async () => {
+    setOutcome("Applying inference noise...");
+    
+    // The force of the noise
+    const noiseForce = 60;
+    
+    // If the well is shallow (< 50), the noise is stronger than the gravity
+    if (specificity < 50) {
+      await marbleControls.start({
+        x: [300, 300 + noiseForce, 450],
+        y: [150 + wellDepth * 1.5, 120, 160],
+        transition: { duration: 0.8, type: "spring" }
+      });
+      setOutcome("Result: Context shifted (Hallucination/Synonym)");
+    } else {
+      // The well is deep (>= 50), the marble rattles but falls back in
+      await marbleControls.start({
+        x: [300, 300 + noiseForce * 0.3, 300 - noiseForce * 0.3, 300],
+        y: [
+          150 + wellDepth * 1.5, 
+          150 + wellDepth * 1.5 - 20, 
+          150 + wellDepth * 1.5 - 10, 
+          150 + wellDepth * 1.5
+        ],
+        transition: { duration: 0.8, type: "spring", bounce: 0.6 }
+      });
+      setOutcome("Result: Exact token enforced (Deterministic)");
+    }
+  };
+
+  const resetMarble = () => {
+    marbleControls.set({ x: 300, y: 150 + wellDepth * 1.5 });
+    setOutcome("Ready.");
+  };
 
   return (
-    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm overflow-hidden bg-[#050505] relative">
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 flex gap-2 p-1 bg-[#111111]/80 backdrop-blur rounded-full border border-white/10">
-        <button
-          onClick={() => setIsAnchor(false)}
-          className={`px-4 py-2 rounded-full font-mono text-xs tracking-wider transition-colors ${
-            !isAnchor ? "bg-[#50E3C2] text-black font-bold" : "text-white/50 hover:text-white"
-          }`}
-        >
-          Common Prompt
-        </button>
-        <button
-          onClick={() => setIsAnchor(true)}
-          className={`px-4 py-2 rounded-full font-mono text-xs tracking-wider transition-colors ${
-            isAnchor ? "bg-[#FF6B35] text-white font-bold shadow-[0_0_15px_#FF6B35]" : "text-white/50 hover:text-white"
-          }`}
-        >
-          Anchor Prompt
-        </button>
+    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#F8F6F1] dark:bg-[#0D0D0B] overflow-hidden">
+      
+      {/* Controls */}
+      <div className="p-8 border-b border-[#111111]/10 dark:border-[#EDE9E1]/10 bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02] flex flex-col md:flex-row justify-between gap-8">
+        <div className="flex-1">
+          <label className="font-mono text-xs tracking-widest uppercase text-[#111111]/50 dark:text-[#EDE9E1]/50 block mb-4">
+            Prompt Specificity (Semantic Gravity)
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={specificity}
+            onChange={(e) => {
+              setSpecificity(Number(e.target.value));
+              resetMarble();
+            }}
+            className="w-full accent-[#C93D0E] dark:accent-[#FF6B35]"
+          />
+          <div className="flex justify-between mt-2 font-mono text-[10px] text-[#111111]/30 dark:text-[#EDE9E1]/30">
+            <span>Diffuse ("Summarize")</span>
+            <span>Anchored ("Monolexemic")</span>
+          </div>
+        </div>
+
+        <div className="shrink-0 flex items-end">
+          <button
+            onClick={handleNoise}
+            className="px-6 py-2 bg-[#C93D0E] text-white dark:bg-[#FF6B35] font-mono text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity rounded"
+          >
+            Apply GPU Noise
+          </button>
+        </div>
       </div>
 
-      <div className="h-[500px] w-full">
+      {/* Viewport */}
+      <div className="relative h-[300px] w-full flex items-center justify-center overflow-hidden">
         
-          <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
-            <Suspense fallback={null}>
-            <ParticleNebula isAnchor={isAnchor} />
-            </Suspense>
-          </Canvas>
-        
-      </div>
+        {/* SVG Landscape */}
+        <svg width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none" className="absolute inset-0">
+          <motion.path
+            d={generateLandscape()}
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            className="text-[#111111]/10 dark:text-[#EDE9E1]/10"
+            transition={{ type: "spring", bounce: 0 }}
+          />
+          <motion.path
+            d={generateLandscape()}
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="text-[#C93D0E] dark:text-[#FF6B35]"
+            style={{ transform: 'translateY(10px)', opacity: 0.5 }}
+            transition={{ type: "spring", bounce: 0 }}
+          />
+        </svg>
 
-      <div className="p-4 border-t border-white/10 bg-[#0D0D0B] flex items-center justify-center gap-3">
-        <span className="w-3 h-3 rounded-full bg-[#FF6B35] shadow-[0_0_10px_#FF6B35]"></span>
-        <span className="font-mono text-[10px] tracking-widest uppercase text-white/50">
-          The Target Token
-        </span>
+        {/* The Target Token / Marble */}
+        <motion.div
+          animate={marbleControls}
+          initial={{ x: 300, y: 150 + wellDepth * 1.5 }}
+          className="absolute top-0 left-0 w-6 h-6 -ml-3 -mt-3 rounded-full bg-[#111111] dark:bg-[#EDE9E1] shadow-[0_0_15px_rgba(0,0,0,0.5)] border-2 border-[#C93D0E] dark:border-[#FF6B35] flex items-center justify-center z-10"
+        >
+          <div className="w-1 h-1 bg-[#C93D0E] dark:bg-[#FF6B35] rounded-full" />
+        </motion.div>
+
+        {/* Overlay text */}
+        <div className="absolute top-6 left-6 font-mono text-[10px] tracking-widest uppercase text-[#111111]/40 dark:text-[#EDE9E1]/40">
+          Latent Space Topology
+        </div>
+        
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#111111] dark:bg-[#EDE9E1] text-[#F8F6F1] dark:text-[#0D0D0B] font-mono text-[11px] tracking-widest px-4 py-2 rounded">
+          {outcome}
+        </div>
       </div>
     </div>
   );

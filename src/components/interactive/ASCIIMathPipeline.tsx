@@ -1,8 +1,5 @@
-import { useState, useMemo, useRef, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Text, Torus, Environment } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import * as THREE from "three";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function generateNoise(length: number) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
@@ -13,137 +10,153 @@ function generateNoise(length: number) {
   return result;
 }
 
-function HashProcessor({ scrub, noiseString }: { scrub: number, noiseString: string }) {
-  const ringRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (ringRef.current) {
-      ringRef.current.rotation.z = state.clock.elapsedTime * 2;
-      // Pulse scale when a character hits
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 10) * 0.05;
-      ringRef.current.scale.set(scale, scale, scale);
-    }
-  });
-
-  return (
-    <group position={[0, 0, 0]}>
-      {/* The processing ring */}
-      <Torus ref={ringRef} args={[1.5, 0.1, 16, 64]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#000" emissive="#FF6B35" emissiveIntensity={2} wireframe />
-      </Torus>
-
-      {/* Characters flying in */}
-      {noiseString.split("").map((char, i) => {
-        // Compute position based on scrub
-        // When scrub == i, char is at z=0 (inside ring)
-        // When scrub < i, char is at z < 0 (waiting to enter)
-        // When scrub > i, char is at z > 0 (has passed through and shattered)
-        const zPos = (scrub - i) * 2;
-        const passed = zPos > 0;
-        
-        // Random offset for shattering effect
-        const hashVal = char.charCodeAt(0);
-        const randX = (hashVal % 10 - 5) * 0.2;
-        const randY = ((hashVal*2) % 10 - 5) * 0.2;
-
-        return (
-          <Text
-            key={i}
-            position={[passed ? randX * zPos : 0, passed ? randY * zPos : 0, -zPos]}
-            rotation={[0, 0, passed ? zPos * 0.5 : 0]}
-            fontSize={passed ? 0.8 : 1.2}
-            color={passed ? "#50E3C2" : "#FFF"}
-            anchorX="center"
-            anchorY="middle"
-            material-transparent
-            material-opacity={Math.max(0, 1 - Math.abs(zPos) * 0.15)}
-          >
-            {passed ? hashVal : char}
-          </Text>
-        );
-      })}
-    </group>
-  );
-}
-
 export default function ASCIIMathPipeline() {
-  const [noiseString, setNoiseString] = useState(() => generateNoise(16));
-  const [scrub, setScrub] = useState(0);
-
-  const regenerate = () => {
-    setNoiseString(generateNoise(16));
-    setScrub(0);
-  };
+  const [seed, setSeed] = useState(() => generateNoise(12));
+  const [scrub, setScrub] = useState(0); // 0 to length
 
   const currentSum = useMemo(() => {
     let sum = 0;
     for (let i = 0; i < scrub; i++) {
-      sum += noiseString.charCodeAt(i);
+      sum += seed.charCodeAt(i);
     }
     return sum;
-  }, [noiseString, scrub]);
+  }, [seed, scrub]);
 
-  const result = currentSum % 2 === 0 ? "Heads" : "Tails";
-  const isDone = scrub === noiseString.length;
+  const moduloResult = currentSum % 2;
+  const isDone = scrub === seed.length;
 
   return (
-    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#050505] overflow-hidden">
+    <div className="my-16 border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded-sm bg-[#F8F6F1] dark:bg-[#0D0D0B] overflow-hidden">
       
-      <div className="flex flex-col md:flex-row items-center justify-between p-6 bg-[#0D0D0B] border-b border-white/10 z-10 relative">
-        <div className="w-full md:w-1/2 mb-4 md:mb-0">
-          <label className="font-mono text-xs tracking-widest uppercase text-white/50 block mb-4">
-            Hash Processing Pipeline
+      {/* Controls */}
+      <div className="p-8 border-b border-[#111111]/10 dark:border-[#EDE9E1]/10 bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02] flex flex-col md:flex-row justify-between gap-8 items-end">
+        <div className="flex-1 w-full">
+          <label className="font-mono text-xs tracking-widest uppercase text-[#111111]/50 dark:text-[#EDE9E1]/50 block mb-4">
+            Execution Scrubber
           </label>
           <input
             type="range"
             min="0"
-            max={noiseString.length}
+            max={seed.length}
             value={scrub}
             onChange={(e) => setScrub(Number(e.target.value))}
-            className="w-full accent-[#FF6B35]"
+            className="w-full accent-[#C93D0E] dark:accent-[#FF6B35]"
           />
         </div>
         <button
-          onClick={regenerate}
-          className="px-6 py-2 bg-[#FF6B35] text-white font-mono text-xs font-bold tracking-widest uppercase hover:bg-[#C93D0E] transition-colors rounded shadow-[0_0_15px_rgba(255,107,53,0.4)]"
+          onClick={() => { setSeed(generateNoise(12)); setScrub(0); }}
+          className="px-6 py-2 border border-[#C93D0E] text-[#C93D0E] dark:border-[#FF6B35] dark:text-[#FF6B35] font-mono text-xs tracking-widest hover:bg-[#C93D0E]/5 transition-colors rounded whitespace-nowrap"
         >
-          Generate Stream
+          Generate New SSoT
         </button>
       </div>
 
-      <div className="h-[400px] w-full relative cursor-crosshair">
-        {/* Background glow */}
-        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'linear-gradient(to bottom, #050505, #112222)' }}></div>
-        
-        
-          <Canvas camera={{ position: [2, 1, 6], fov: 60 }}>
-            <Suspense fallback={null}>
-            <ambientLight intensity={0.2} />
-            <directionalLight position={[0, 10, 5]} intensity={2} />
-            <Environment preset="city" />
-            
-            <HashProcessor scrub={scrub} noiseString={noiseString} />
-
-            <EffectComposer>
-              <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
-            </EffectComposer>
-            </Suspense>
-          </Canvas>
-        
-
-        {/* Floating HUD */}
-        <div className="absolute bottom-6 right-6 flex flex-col gap-4 text-right">
-          <div className="bg-[#111]/80 backdrop-blur border border-white/10 px-4 py-2 rounded">
-            <span className="font-mono text-[10px] tracking-widest text-white/40 block">ASCII SUM</span>
-            <span className="font-mono text-3xl text-white">{currentSum}</span>
+      <div className="p-8 md:p-12">
+        {/* The Scratchpad String */}
+        <div className="bg-[#111111]/5 dark:bg-[#EDE9E1]/5 rounded p-6 font-mono text-center mb-12 border border-[#111111]/10 dark:border-[#EDE9E1]/10 relative overflow-hidden">
+          <div className="text-[10px] text-[#111111]/30 dark:text-[#EDE9E1]/30 mb-2">&lt;random_string&gt;</div>
+          <div className="text-3xl tracking-[0.3em] font-light">
+            {seed.split("").map((char, i) => (
+              <span 
+                key={i} 
+                className={`transition-colors duration-200 inline-block ${i < scrub ? 'text-[#C93D0E] dark:text-[#FF6B35] font-bold -translate-y-1' : 'text-[#111111]/40 dark:text-[#EDE9E1]/40'}`}
+                style={{ transition: 'all 0.2s ease' }}
+              >
+                {char}
+              </span>
+            ))}
           </div>
-          <div className="bg-[#111]/80 backdrop-blur border border-white/10 px-4 py-2 rounded flex items-center justify-end gap-3">
-            <span className="font-mono text-[10px] tracking-widest text-white/40">MODULO 2</span>
-            <span className={`font-serif text-2xl font-bold transition-colors ${isDone ? 'text-[#FF6B35] shadow-[0_0_10px_#FF6B35]' : 'text-white/20'}`}>
-              {isDone ? result : '...'}
-            </span>
-          </div>
+          <div className="text-[10px] text-[#111111]/30 dark:text-[#EDE9E1]/30 mt-2">&lt;/random_string&gt;</div>
         </div>
+
+        {/* Execution Trace Grid */}
+        <div className="grid md:grid-cols-3 gap-8">
+          
+          {/* ASCII Parser */}
+          <div className="flex flex-col items-center justify-center p-6 bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02] border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[#111111]/50 dark:text-[#EDE9E1]/50 mb-4">
+              Current Char ASCII
+            </span>
+            <div className="text-4xl font-mono text-[#111111] dark:text-[#EDE9E1] h-12">
+              {scrub > 0 && scrub <= seed.length ? (
+                <motion.div
+                  key={scrub}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-baseline gap-2"
+                >
+                  <span className="text-lg text-[#111111]/40 dark:text-[#EDE9E1]/40">'{seed[scrub-1]}' →</span>
+                  <span>{seed.charCodeAt(scrub-1)}</span>
+                </motion.div>
+              ) : (
+                <span className="text-[#111111]/20 dark:text-[#EDE9E1]/20">--</span>
+              )}
+            </div>
+          </div>
+
+          {/* Rolling Sum */}
+          <div className="flex flex-col items-center justify-center p-6 bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02] border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded relative overflow-hidden">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[#111111]/50 dark:text-[#EDE9E1]/50 mb-4">
+              Rolling Sum
+            </span>
+            <div className="text-4xl font-mono text-[#111111] dark:text-[#EDE9E1] h-12 flex items-center">
+              {currentSum}
+            </div>
+            {/* Ping effect on change */}
+            <AnimatePresence>
+              {scrub > 0 && (
+                <motion.div
+                  key={`ping-${scrub}`}
+                  initial={{ scale: 0.8, opacity: 0.5 }}
+                  animate={{ scale: 2, opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 bg-[#C93D0E]/10 dark:bg-[#FF6B35]/10 rounded-full pointer-events-none"
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Modulo Result */}
+          <div className="flex flex-col items-center justify-center p-6 bg-[#111111]/[0.02] dark:bg-[#EDE9E1]/[0.02] border border-[#111111]/10 dark:border-[#EDE9E1]/10 rounded">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[#111111]/50 dark:text-[#EDE9E1]/50 mb-4">
+              Sum Modulo 2
+            </span>
+            <div className="text-4xl font-serif h-12 flex flex-col items-center justify-center w-full relative">
+              
+              <div className="flex w-full justify-between px-4 font-mono text-xl">
+                <span className={`transition-colors ${moduloResult === 0 ? "text-[#C93D0E] dark:text-[#FF6B35] font-bold" : "text-[#111111]/20 dark:text-[#EDE9E1]/20"}`}>
+                  EVEN (A)
+                </span>
+                <span className={`transition-colors ${moduloResult === 1 ? "text-[#C93D0E] dark:text-[#FF6B35] font-bold" : "text-[#111111]/20 dark:text-[#EDE9E1]/20"}`}>
+                  ODD (B)
+                </span>
+              </div>
+              
+              {/* Highlight bar */}
+              <motion.div
+                className="absolute bottom-0 h-1 bg-[#C93D0E] dark:bg-[#FF6B35]"
+                initial={false}
+                animate={{ 
+                  left: moduloResult === 0 ? "10%" : "60%",
+                  width: "30%" 
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              />
+
+            </div>
+          </div>
+
+        </div>
+
+        {isDone && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 text-center font-mono text-sm text-[#C93D0E] dark:text-[#FF6B35] bg-[#C93D0E]/10 dark:bg-[#FF6B35]/10 py-3 rounded"
+          >
+            Final deterministic choice: {moduloResult === 0 ? "OPTION A" : "OPTION B"}
+          </motion.div>
+        )}
       </div>
     </div>
   );
