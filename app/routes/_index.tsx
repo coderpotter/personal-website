@@ -32,7 +32,7 @@ export default function Index() {
               <a href="#about"        className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">About</a>
               <a href="#experience"   className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Experience</a>
               <a href="#publications" className="hover:text-[#111111] dark:hover:text-[#EDE9E1] transition-colors">Publications</a>
-              <Link to="/writing/autocomplete-developer" className={`${ACCENT} hover:opacity-70 transition-opacity`}>Writing</Link>
+              <a href="#writing"      className={`${ACCENT} hover:opacity-70 transition-opacity`}>Writing</a>
             </div>
             <button
               onClick={toggleTheme}
@@ -190,6 +190,18 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Writing ── */}
+      <section id="writing" className={`py-20 border-t ${RULE}`}>
+        <div className="max-w-5xl mx-auto px-6">
+          <SectionLabel n="06" label="Writing" />
+          <div className="mt-10 space-y-0">
+            {writings.map((article, i) => (
+              <WritingItem key={i} n={i + 1} {...article} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Footer ── */}
       <footer className={`border-t ${RULE} py-10`}>
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -307,6 +319,36 @@ function PublicationItem({ n, title, venue, authors, link }: Publication & { n: 
             View ↗
           </a>
         )}
+      </div>
+    </div>
+  );
+}
+
+interface Writing {
+  title: string;
+  date: string;
+  link: string;
+}
+
+function WritingItem({ n, title, date, link }: Writing & { n: number }) {
+  return (
+    <div className={`py-8 border-b ${RULE} grid md:grid-cols-[200px_1fr] gap-4 md:gap-12`}>
+      <span className={`font-mono text-xs tracking-wide ${MUTED} md:pt-1`}>
+        {String(n).padStart(2, "0")}
+      </span>
+      <div>
+        <h3 className="text-[15px] font-medium text-[#111111] dark:text-[#EDE9E1] leading-snug mb-2">
+          <Link to={link} className="hover:opacity-60 transition-opacity">
+            {title}
+          </Link>
+        </h3>
+        <p className={`font-mono text-xs tracking-wide ${ACCENT} mb-1`}>{date}</p>
+        <Link
+          to={link}
+          className={`inline-flex items-center mt-3 font-mono text-xs tracking-wider ${ACCENT} hover:opacity-70 transition-opacity`}
+        >
+          Read Essay ↗
+        </Link>
       </div>
     </div>
   );
@@ -463,5 +505,13 @@ const publications: Publication[] = [
     venue: "FLAIRS Conference · 2021",
     authors: "A. Nighojkar, J. Licato",
     link: "https://journals.flvc.org/FLAIRS/article/view/128519",
+  },
+];
+
+const writings: Writing[] = [
+  {
+    title: "The Temperature Zero Myth",
+    date: "June 2026",
+    link: "/writing/temperature-zero-myth",
   },
 ];
