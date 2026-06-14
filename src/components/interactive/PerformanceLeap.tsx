@@ -105,7 +105,7 @@ export default function PerformanceLeap() {
         </div>
         
         {/* Floating Explanation Box */}
-        <div className="absolute top-12 right-12 max-w-xs text-[12px] leading-relaxed text-[#111111]/60 dark:text-[#EDE9E1]/60 bg-[#111111]/5 dark:bg-[#EDE9E1]/5 p-4 rounded border border-[#111111]/10 dark:border-[#EDE9E1]/10">
+        <div className="absolute bottom-16 right-12 max-w-xs text-[12px] leading-relaxed text-[#111111]/60 dark:text-[#EDE9E1]/60 bg-[#111111]/5 dark:bg-[#EDE9E1]/5 p-4 rounded border border-[#111111]/10 dark:border-[#EDE9E1]/10">
           <p>As prompt constraint increases, the model's stochastic exploration (the entropy cloud) is forcibly collapsed. Deprived of the ability to 'wander', the small model is forced to rely purely on its deepest pretraining priors, instantly jumping to GPT-4 level performance.</p>
         </div>
 
